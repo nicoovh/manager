@@ -31,6 +31,7 @@ import components from './components';
 import error from './error';
 import projects from './projects';
 import template from './template.html';
+import catalogPricePlayground from './catalog-price-playground';
 
 import './index.scss';
 
@@ -75,6 +76,7 @@ angular
     'ui.bootstrap',
     'ovhManagerBanner',
     region,
+    catalogPricePlayground,
   ])
   .config(
     /* @ngInject */ ($stateProvider) => {

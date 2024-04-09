@@ -1,0 +1,91 @@
+<div class="d-flex p-2 flex-column flex-md-row">
+    <div class="w-50">
+        <div class="oui-box">
+            <h5>Catalog</h5>
+            <div ng-if="$ctrl.plans">
+                <oui-select model="$ctrl.plan" items="$ctrl.plans" match="planCode" />
+                <div>price = {{ $ctrl.plan.pricings[0].price }}</div>
+                <div>tax = {{ $ctrl.plan.pricings[0].tax }}</div>
+                <div>interval = {{ $ctrl.plan.pricings[0].interval }}</div>
+                <div>intervalUnit = {{ $ctrl.plan.pricings[0].intervalUnit }}</div>
+            </div>
+            <oui-spinner ng-if="$ctrl.loading" size="s" />
+        </div>
+        <div class="oui-box mt-1">
+            <h5>Formats</h5>
+            <h6 class="mb-1">French format</h6>
+            <oui-button 
+                class="mr-1 mb-1"
+                variant="{{ $ctrl.format === format ? 'primary' : 'secondary' }}"
+                disabled="$ctrl.loading"
+                ng-repeat="format in [ 'CZ', 'ES', 'FR', 'GB', 'IE', 'IT', 'LT', 'MA', 'NL', 'PL', 'PT', 'TN' ] | orderBy: 'toString()'"
+                ng-click="$ctrl.setFormat(format)"
+            >
+                {{ format }}
+            </oui-button>
+            <h6 class="mb-1 mt-2">Asia format</h6>
+            <oui-button 
+                class="mr-1 mb-1"
+                variant="{{ $ctrl.format === format ? 'primary' : 'secondary' }}"
+                disabled="$ctrl.loading"
+                ng-repeat="format in ['SG', 'ASIA', 'AU', 'IN'] | orderBy: 'toString()'"
+                ng-click="$ctrl.setFormat(format)"
+            >
+                {{ format }}
+            </oui-button>
+            <h6 class="mb-1 mt-2">German format</h6>
+            <oui-button 
+                class="mr-1 mb-1"
+                variant="{{ $ctrl.format === format ? 'primary' : 'secondary' }}"
+                disabled="$ctrl.loading"
+                ng-repeat="format in ['DE', 'FI', 'SN'] | orderBy: 'toString()'"
+                ng-click="$ctrl.setFormat(format)"
+            >
+                {{ format }}
+            </oui-button>
+            <h6 class="mb-1 mt-2">US format</h6>
+            <oui-button 
+                class="mr-1 mb-1"
+                variant="{{ $ctrl.format === format ? 'primary' : 'secondary' }}"
+                disabled="$ctrl.loading"
+                ng-repeat="format in ['CA', 'WE', 'WS', 'QC', 'US'] | orderBy: 'toString()'"
+                ng-click="$ctrl.setFormat(format)"
+            >
+                {{ format }}
+            </oui-button>
+        </div>
+        <div class="oui-box mt-1">
+            <h5 class="d-flex align-items-center">Options <oui-button class="ml-2" on-click="$ctrl.recompile()">recompile comp</oui-button></h5>
+            <div ng-if="$ctrl.plans">
+                <div><oui-switch model="$ctrl.block" class="mr-2" /><span>block</span></div>
+                <div><oui-switch model="$ctrl.convertToUcents" class="mr-2" /><span>convertToUcents</span></div>
+                <div><oui-switch model="$ctrl.showInterval" class="mr-2" /><span>set interval ({{ $ctrl.plan.pricings[0].interval }})</span></div>
+                <div><oui-switch model="$ctrl.showIntervalUnit" class="mr-2" /><span>set intervalUnit ({{ $ctrl.plan.pricings[0].intervalUnit }})</span></div>
+                <div><oui-switch model="$ctrl.performRounding" class="mr-2" /><span>performRounding</span></div>
+                <div><oui-switch model="$ctrl.showZeroPrice" class="mr-2" /><span>showZeroPrice</span></div>
+                <div><oui-switch model="$ctrl.beta" class="mr-2" /><span>beta</span></div>
+                <div class="d-flex mt-1 align-items-baseline"><input class="oui-input oui-input_xs" type="number" ng-model="$ctrl.minimumFractionDigits" /><span class="ml-2">minimumFractionDigits</span></div>
+                <div class="d-flex mt-1 align-items-baseline"><input class="oui-input oui-input_xs" type="number" ng-model="$ctrl.maximumFractionDigits" /><span class="ml-2">maximumFractionDigits</span></div>
+            </div>
+            <oui-spinner ng-if="$ctrl.loading" size="s" />
+        </div>
+    </div>
+    <div class="oui-box w-50 ml-1">
+        <h3>Output</h3>
+        <ovh-manager-catalog-price
+          ng-if="$ctrl.plan && !$ctrl.recompiling"
+          price="$ctrl.plan.pricings[0].price"
+          tax="$ctrl.plan.pricings[0].tax"
+          block="$ctrl.convertToUcents"
+          convert-to-ucents="$ctrl.convertToUcents"
+          perform-rounding="$ctrl.performRounding"
+          show-zero-price="$ctrl.showZeroPrice"
+          beta="$ctrl.beta"
+          ng-attr-interval="$ctrl.showInterval ? $ctrl.plan.pricings[0].interval : undefined"
+          ng-attr-interval-unit="{{ $ctrl.showIntervalUnit ? $ctrl.plan.pricings[0].intervalUnit : undefined }}"
+          ng-attr-minimum-fraction-digits="$ctrl.minimumFractionDigits !== undefined ? $ctrl.minimumFractionDigits : undefined"
+          ng-attr-maximum-fraction-digits="$ctrl.maximumFractionDigits !== undefined ? $ctrl.maximumFractionDigits : undefined"
+        />
+        <oui-spinner ng-if="$ctrl.loading" size="s" />
+    </div>
+</div>
