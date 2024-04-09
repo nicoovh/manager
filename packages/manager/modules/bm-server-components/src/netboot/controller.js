@@ -43,18 +43,16 @@ export default class BmServerComponentsNetbootCtrl {
       init: true,
       setNetboot: false,
     };
-    this.isValid = {
-      root: null,
-      rescueMail: null,
-    };
 
     this.netboots = null; // all available netboot
     this.rescueAuthMethods = ['password', 'sshkey']; // rescue auth methods
     this.currentAuthMethod = null;
     this.networkNetboot = null; // network available netboot
     this.currentNetboot = {}; // current netboot option
-    this.rescueSshKey = null; // current rescue ssh key
-    this.sshKeyInputRules = SSH_KEY;
+    this.ssh = {
+      publicKey: '',
+      inputRules: SSH_KEY,
+    };
     this.rootDevice = {
       root: null,
     };
@@ -95,19 +93,6 @@ export default class BmServerComponentsNetbootCtrl {
     }
   }
 
-  firstStepValidation() {
-    return (
-      this.currentNetboot.type === this.HARDDISK ||
-      (this.currentNetboot.type === this.RESCUE &&
-        this.currentNetboot.rescue !== '' &&
-        this.isValid.rescueMail) ||
-      (this.currentNetboot.type === this.NETWORK &&
-        this.currentNetboot.network !== '' &&
-        this.isValid.root &&
-        this.sshKeyValidation())
-    );
-  }
-
   onRootDeviceChange() {
     if (this.configurationForm) {
       const rootDeviceEle = this.configurationForm.rootdevice;
@@ -122,7 +107,7 @@ export default class BmServerComponentsNetbootCtrl {
         (v) => v !== this.SSHKEY,
       );
       this.currentAuthMethod = this.PASSWORD;
-      this.rescueSshKey = null;
+      this.ssh.publicKey = '';
     } else {
       this.rescueAuthMethods.push(this.SSHKEY);
       this.loadRescueSshKey();
@@ -145,53 +130,39 @@ export default class BmServerComponentsNetbootCtrl {
     return regRootDevice.test(this.rootDevice.root);
   }
 
-  sshKeyValidation(prmKey) {
-    if (this.currentAuthMethod === this.SSHKEY) {
-      const regSshKey = new RegExp(
-        /^(ssh-rsa|ecdsa-sha\d+-nistp\d+|ssh-ed\d+)\s+(AAAA[a-zA-Z0-9/=+]+)(\s+(\S{1,128}))*$/g,
-      );
-      return regSshKey.test(prmKey);
-    }
-    return false;
-  }
-
   static getActiveOptions(networkOption) {
     return networkOption.value !== 'N';
   }
 
   setNetboot() {
     const netbootId = this.currentNetboot[this.currentNetboot.type].id;
-    const rootDevice =
-      (this.currentNetboot.type === this.NETWORK && this.rootDevice.root) ||
-      this.server.rootDevice;
-    const netbootType = this.currentNetboot.type;
+    let rootDevice = null;
+    if (this.currentNetboot.type === this.NETWORK) {
+      rootDevice = this.rootDevice.root;
+    } else if (this.currentNetboot.type !== this.RESCUE) {
+      rootDevice = this.server.rootDevice;
+    }
 
-    this.trackClick(`confirm_${netbootType}`);
+    this.trackClick(`confirm_${this.currentNetboot.type}`);
 
     this.loading.setNetboot = true;
 
-    const promiseList = [
-      this.netbootService.setNetBoot(
-        this.serviceName,
-        netbootId,
-        rootDevice,
-        netbootType,
-      ),
-    ];
-    if (this.currentNetboot.type === this.RESCUE) {
-      if (this.currentAuthMethod === this.PASSWORD) this.rescueSshKey = null;
-      promiseList.push(
-        this.netbootService.updateRescueInfos(
-          this.serviceName,
-          netbootId,
-          this.currentNetboot.rescueMail,
-          this.rescueSshKey,
-        ),
-      );
-    }
+    if (
+      this.currentNetboot.type === this.RESCUE &&
+      this.currentAuthMethod === this.PASSWORD
+    )
+      this.ssh.publicKey = '';
 
     this.$q
-      .all(promiseList)
+      .all([
+        this.netbootService.setNetBoot(
+          this.serviceName,
+          netbootId,
+          rootDevice,
+          this.currentNetboot.rescueMail,
+          this.ssh.publicKey,
+        ),
+      ])
       .then(() => {
         this.goBack(
           this.$translate.instant('server_configuration_netboot_success'),
@@ -232,9 +203,8 @@ export default class BmServerComponentsNetbootCtrl {
     this.netbootService
       .getServerInfos(this.serviceName)
       .then((server) => {
-        this.rescueSshKey = server.rescueSshKey;
-        if (this.rescueSshKey !== null || this.rescueSshKey !== '')
-          this.currentAuthMethod = this.SSHKEY;
+        this.ssh.publicKey = server.rescueSshKey;
+        if (this.ssh.publicKey !== '') this.currentAuthMethod = this.SSHKEY;
       })
       .catch((error) =>
         this.handleError(

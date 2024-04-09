@@ -4,19 +4,17 @@ export default class BmServerComponentsNetbootService {
     this.$http = $http;
   }
 
-  setNetBoot(serviceName, bootId, rootDevice) {
+  setNetBoot(
+    serviceName,
+    bootId,
+    rootDevice = null,
+    rescueMail = null,
+    rescueSshKey = null,
+  ) {
     return this.$http
       .put(`/dedicated/server/${serviceName}`, {
         bootId,
         rootDevice,
-      })
-      .then(({ data }) => data);
-  }
-
-  updateRescueInfos(serviceName, bootId, rescueMail, rescueSshKey) {
-    return this.$http
-      .put(`/dedicated/server/${serviceName}`, {
-        bootId,
         rescueMail,
         rescueSshKey,
       })

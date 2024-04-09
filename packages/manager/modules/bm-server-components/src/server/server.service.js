@@ -270,18 +270,6 @@ export default class Server {
     });
   }
 
-  updateRescueInfos(productId, bootId, rescueMail, rescueSshKey) {
-    return this.put(productId, '', {
-      data: {
-        bootId,
-        rescueMail,
-        rescueSshKey,
-      },
-      proxypass: true,
-      broadcast: 'dedicated.informations.reload',
-    });
-  }
-
   removeHack(productId) {
     return this.put(productId, '', {
       data: {

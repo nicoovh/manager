@@ -20,6 +20,7 @@
             data-submit-text="{{ ::'server_configuration_netboot_next' | translate }}"
             data-on-focus="$ctrl.isInConfigurationStep = true"
             data-on-submit="$ctrl.onConfigurationSubmit(form)"
+            prevent-next
         >
             <div class="row mb-1">
                 <div
@@ -112,23 +113,23 @@
                                 class="float-right sshkey-switch"
                                 data-ng-model="model.keyIsValid"
                                 data-sshkey-switch
-                                data-sshkey-switch-key="{{$ctrl.rescueSshKey}}"
+                                data-sshkey-switch-key="{{$ctrl.ssh.publicKey}}"
                             ></div>
 
                             <textarea
                                 class="oui-input form-control"
                                 name="rescueSshKey"
                                 id="rescueSshKey"
-                                placeholder="{{:: 'server_configuration_netboot_sshkey_input_placeholder' | translate:{t0: $ctrl.sshKeyInputRules.placeholder} }}"
-                                data-ng-model="$ctrl.rescueSshKey"
+                                placeholder="{{:: 'server_configuration_netboot_sshkey_input_placeholder' | translate:{t0: $ctrl.ssh.inputRules.placeholder} }}"
+                                data-ng-model="$ctrl.ssh.publicKey"
                                 data-ng-required="true"
-                                data-ng-pattern="$ctrl.sshKeyInputRules.pattern"
+                                data-ng-pattern="$ctrl.ssh.inputRules.pattern"
                                 data-ng-trim="true"
                                 spellcheck="false"
                                 autocomplete="off"
                                 autocapitalize="off"
                                 autocorrect="off"
-                                rows="{{ $ctrl.sshKeyInputRules.rows }}"
+                                rows="{{ $ctrl.ssh.inputRules.rows }}"
                             >
                             </textarea>
                         </oui-field>
