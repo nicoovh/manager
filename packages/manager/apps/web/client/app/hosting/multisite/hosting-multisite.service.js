@@ -180,7 +180,8 @@ angular.module('services').service(
             home,
             wwwNeeded,
             ipv6Needed,
-            !!urlSplitted.zone,
+            // autoconfigure was set to update dns zone via 2api: it is now done via backend
+            false,
             cdn.toLowerCase(),
             countryIp,
             firewall.toLowerCase(),
