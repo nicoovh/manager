@@ -8,7 +8,17 @@ import {
 } from './headers.stories';
 import '@testing-library/jest-dom';
 
+import { useIsAuthorized } from '../../../hooks/iam';
+
+jest.mock('../../../hooks/iam');
+
+const mockedUseCustomHook = useIsAuthorized as jest.Mock<boolean>;
+
 describe('Headers component', () => {
+  beforeEach(() => {
+    mockedUseCustomHook.mockReturnValue(true);
+  });
+
   it('renders header correctly', async () => {
     render(header());
     waitFor(() => {
