@@ -10,26 +10,23 @@ import './translations';
 import { useAuthorizationIam } from '../../hooks/iam';
 
 export type ManagerButtonProps = PropsWithChildren<{
-  action?: string;
+  iamActions?: string[];
   urn?: string;
 }>;
 
 export const ManagerButton = ({
   children,
-  action,
+  iamActions,
   urn,
   ...restProps
 }: ManagerButtonProps & any) => {
   const { t } = useTranslation('iam');
-  const { isAuthorized } = useAuthorizationIam([action], urn);
+  const { isAuthorized } = useAuthorizationIam(iamActions, urn);
 
   if (!isAuthorized) {
     return (
       <OsdsTooltip>
-        <OsdsButton
-          {...restProps}
-          disabled={restProps.disabled || isAuthorized ? undefined : true}
-        >
+        <OsdsButton {...restProps} disabled>
           {children}
         </OsdsButton>
         <OsdsTooltipContent slot="tooltip-content">

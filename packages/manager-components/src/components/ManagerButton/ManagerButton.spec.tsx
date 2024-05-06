@@ -3,14 +3,14 @@ import '@testing-library/jest-dom';
 import { ManagerButton, ManagerButtonProps } from './ManagerButton';
 import { render } from '../../utils/test.provider';
 import fr_FR from './translations/Messages_fr_FR.json';
-import { useIsAuthorized } from '../../hooks/iam';
+import { useAuthorizationIam } from '../../hooks/iam';
 
 jest.mock('../../hooks/iam');
 
 const renderComponent = (props: ManagerButtonProps) => {
   return render(<ManagerButton {...props} />);
 };
-const mockedUseCustomHook = useIsAuthorized as jest.Mock<boolean>;
+const mockedUseCustomHook = useAuthorizationIam as jest.Mock<object>;
 
 describe('ManagerButton tests', () => {
   afterEach(() => {
@@ -18,34 +18,46 @@ describe('ManagerButton tests', () => {
   });
 
   describe('should display manager button', () => {
-    it('with true value for useIsAuthorized', () => {
-      mockedUseCustomHook.mockReturnValue(true);
+    it('with true value for useAuthorizationIam', () => {
+      mockedUseCustomHook.mockReturnValue({ isAuthorized: true });
       renderComponent({
         urn: 'urn:v9:eu:resource:manager-components:vrz-a878-dsflkds-fdsfsd',
-        action: 'manager-components:apiovh:manager-components/attach-action',
+        iamActions: [
+          'manager-components:apiovh:manager-components/attach-action',
+        ],
         children: <div>foo-manager-button</div>,
       });
       expect(screen.getAllByText('foo-manager-button')).not.toBeNull();
     });
-    it('with false value for useIsAuthorized', () => {
-      mockedUseCustomHook.mockReturnValue(false);
+
+    it('with false value for useAuthorizationIam', () => {
+      mockedUseCustomHook.mockReturnValue({ isAuthorized: false });
       renderComponent({
         urn: 'urn:v9:eu:resource:manager-components:vrz-a878-dsflkds-fdsfsd',
-        action: 'manager-components:apiovh:manager-components/attach',
+        iamActions: ['manager-components:apiovh:manager-components/attach'],
         children: <div>foo-manager-button</div>,
       });
       expect(screen.getAllByText('foo-manager-button')).not.toBeNull();
+      expect(
+        screen.getByText('foo-manager-button').parentElement,
+      ).toBeDisabled();
     });
   });
+
   describe('should display tooltip', () => {
-    it('with false value for useIsAuthorized', () => {
-      mockedUseCustomHook.mockReturnValue(false);
+    it('with false value for useAuthorizationIam', () => {
+      mockedUseCustomHook.mockReturnValue({ isAuthorized: false });
       renderComponent({
         urn: 'urn:v9:eu:resource:manager-components:vrz-a878-dsflkds-fdsfsd',
-        action: 'manager-components:apiovh:manager-components/attach-action',
+        iamActions: [
+          'manager-components:apiovh:manager-components/attach-action',
+        ],
         children: <div>foo-manager-button</div>,
       });
       expect(screen.getAllByText('foo-manager-button')).not.toBeNull();
+      expect(
+        screen.getByText('foo-manager-button').parentElement,
+      ).toBeDisabled();
       const button = screen.getByText('foo-manager-button');
       fireEvent.mouseOver(button);
       expect(

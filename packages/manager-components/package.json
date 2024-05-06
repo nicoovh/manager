@@ -93,6 +93,9 @@
     "react-router-dom": "^6.21.0",
     "zustand": "^4.5.0"
   },
+  "peerDependencies": {
+    "@tanstack/react-query": "5.29.2"
+  },
   "files": [
     "dist"
   ],

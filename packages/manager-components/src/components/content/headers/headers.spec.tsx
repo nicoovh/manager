@@ -8,15 +8,15 @@ import {
 } from './headers.stories';
 import '@testing-library/jest-dom';
 
-import { useIsAuthorized } from '../../../hooks/iam';
+import { useAuthorizationIam } from '../../../hooks/iam';
 
 jest.mock('../../../hooks/iam');
 
-const mockedUseCustomHook = useIsAuthorized as jest.Mock<boolean>;
+const mockedUseCustomHook = useAuthorizationIam as jest.Mock<object>;
 
 describe('Headers component', () => {
   beforeEach(() => {
-    mockedUseCustomHook.mockReturnValue(true);
+    mockedUseCustomHook.mockReturnValue({ isAuthorized: true });
   });
 
   it('renders header correctly', async () => {

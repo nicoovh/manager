@@ -30,7 +30,7 @@ export interface ActionMenuItem {
   target?: OdsHTMLAnchorElementTarget;
   onClick?: () => void;
   label: ReactI18NextChild | Iterable<ReactI18NextChild>;
-  action?: string;
+  actionIam?: string;
   urn?: string;
 }
 
@@ -40,16 +40,11 @@ export interface ActionMenuProps {
   isIamTrigger?: boolean;
 }
 
-export type ActionMenuIamProps = PropsWithChildren<{
-  action?: string;
-  urn?: string;
-}>;
-
 const MenuItem = ({ item }: any) => {
   return (
     <OsdsMenuItem key={item.id}>
       <ManagerButton
-        action={item.action}
+        action={[item.action]}
         urn={item.urn}
         size={ODS_BUTTON_SIZE.sm}
         color={ODS_THEME_COLOR_INTENT.primary}
