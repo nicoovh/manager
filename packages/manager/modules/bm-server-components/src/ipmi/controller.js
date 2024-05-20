@@ -19,6 +19,7 @@ export default class BmServerComponentsIpmiController {
     IpmiService,
     Polling,
     $scope,
+    $timeout,
     $q,
   ) {
     this.$sce = $sce;
@@ -29,6 +30,7 @@ export default class BmServerComponentsIpmiController {
     this.IpmiService = IpmiService;
     this.Polling = Polling;
     this.$scope = $scope;
+    this.$timeout = $timeout;
     this.$q = $q;
   }
 
@@ -100,6 +102,30 @@ export default class BmServerComponentsIpmiController {
       .finally(() => {
         this.loader.loading = false;
       });
+
+    this.$scope.setAction = (action, data) => {
+      this.$scope.currentAction = action;
+      this.$scope.currentActionData = data;
+
+      if (this.$scope.currentAction) {
+        this.$scope.stepPath = `bm-server-components/ipmi/${action}.html`;
+
+        $('#sshAction').modal({
+          keyboard: false,
+          backdrop: 'static',
+        });
+      } else {
+        $('#sshAction').modal('hide');
+
+        this.$timeout(() => {
+          delete this.$scope.stepPath;
+        }, 300);
+      }
+    };
+
+    this.$scope.resetAction = () => {
+      this.$scope.setAction();
+    };
   }
 
   $onDestroy() {
@@ -655,6 +681,7 @@ export default class BmServerComponentsIpmiController {
     this.trackClick('access-sol-ssh');
     this.loader.buttonStart = true;
     this.loader.solSshKeyLoading = true;
+    this.$scope.setAction();
     return this.IpmiService.ipmiStartConnection({
       serviceName: this.serviceName,
       type: 'serialOverLanSshKey',
