@@ -39,15 +39,6 @@
         <oui-dropdown-content>
             <button
                 class="oui-dropdown-option"
-                data-ng-click="setAction('ssh/add/dedicated/user-ssh-add-dedicated', ctrlSsh.sshKeyList, '', true)"
-                data-track-name="account::ssh::add::dedicated::add_ssh_key"
-                data-track-on="click"
-                data-track-type="action"
-            >
-                <span data-translate="user_ssh_category_dedicated"></span>
-            </button>
-            <button
-                class="oui-dropdown-option"
                 data-ng-click="setAction('ssh/add/cloud/user-ssh-add-cloud', '', true)"
                 data-track-name="account::ssh::add::cloud::add_ssh_key"
                 data-track-on="click"
@@ -78,10 +69,6 @@
                             <option
                                 value=""
                                 data-translate="user_ssh_category_all"
-                            ></option>
-                            <option
-                                value="dedicated"
-                                data-translate="user_ssh_category_dedicated"
                             ></option>
                             <option
                                 value="cloud"

@@ -27,7 +27,6 @@ export default /* @ngInject */ function UserAccountSshService(
         promises.push(this.getCloudSshList());
         break;
       default:
-        promises.push(this.getDedicatedSshList());
         promises.push(this.getCloudSshList());
     }
 
