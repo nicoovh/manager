@@ -11,6 +11,7 @@ import {
   ActionMenu,
   ActionMenuItem,
   DataGridTextCell,
+  ManagerButton,
 } from '@ovhcloud/manager-components';
 import {
   ButtonType,
@@ -45,6 +46,8 @@ export const VrackId: React.FC<VrackServicesWithIAM & {
   const menuItems: ActionMenuItem[] = [
     {
       id: 1,
+      urn: vs.iam.urn,
+      action: 'vrackServices:apiovh:storageNetApp/detach',
       label: tDashboard('vrackActionDissociate'),
       onClick: () => {
         trackClick({
@@ -84,7 +87,9 @@ export const VrackId: React.FC<VrackServicesWithIAM & {
   }
 
   return (
-    <OsdsButton
+    <ManagerButton
+      action={'vrackServices:apiovh:vrack/attach'}
+      urn={vs.iam.urn}
       inline
       color={ODS_THEME_COLOR_INTENT.primary}
       variant={ODS_BUTTON_VARIANT.stroked}
@@ -102,6 +107,6 @@ export const VrackId: React.FC<VrackServicesWithIAM & {
       })}
     >
       {t('associateVrackButtonLabel')}
-    </OsdsButton>
+    </ManagerButton>
   );
 };

@@ -46,6 +46,7 @@ export const DisplayName: React.FC<VrackServicesWithIAM & {
 
   return (
     <EditableText
+      urn={vs.iam.urn}
       disabled={!isEditable(vs) || isPending}
       defaultValue={name}
       onEditSubmitted={async (value) => {

@@ -13,6 +13,7 @@ import {
   Datagrid,
   DatagridColumn,
   useDataGrid,
+  ManagerButton,
 } from '@ovhcloud/manager-components';
 import { OsdsButton, OsdsIcon } from '@ovhcloud/ods-components/react';
 import { ODS_THEME_COLOR_INTENT } from '@ovhcloud/ods-common-theming';
@@ -36,7 +37,9 @@ const ActionCell: React.FC<VrackServicesWithIAM> = (vs) => {
   const { trackClick } = useOvhTracking();
 
   return (
-    <OsdsButton
+    <ManagerButton
+      urn={vs.iam.urn}
+      action={'vrackServices:apiovh:resource/edit'}
       inline
       circle
       color={ODS_THEME_COLOR_INTENT.error}
@@ -59,7 +62,7 @@ const ActionCell: React.FC<VrackServicesWithIAM> = (vs) => {
         name={ODS_ICON_NAME.TRASH}
         size={ODS_ICON_SIZE.xs}
       />
-    </OsdsButton>
+    </ManagerButton>
   );
 };
 

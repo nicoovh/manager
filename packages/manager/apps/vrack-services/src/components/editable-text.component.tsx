@@ -18,6 +18,9 @@ import {
   ODS_TEXT_LEVEL,
 } from '@ovhcloud/ods-components';
 import { ODS_THEME_COLOR_INTENT } from '@ovhcloud/ods-common-theming';
+
+import { ManagerButton, ManagerText } from '@ovhcloud/manager-components';
+import { vrackDetails } from 'mock/vrack/vrack';
 import { handleClick } from '@/utils/ods-utils';
 
 export type EditableTextProps = React.PropsWithChildren<{
@@ -25,12 +28,14 @@ export type EditableTextProps = React.PropsWithChildren<{
   disabled?: boolean;
   defaultValue: string;
   emptyValueLabel?: string;
+  urn?: string;
   onEditSubmitted: (newValue: string) => Promise<void>;
 }>;
 
 export type EditStatus = 'display' | 'editing' | 'loading';
 
 export const EditableText: React.FC<EditableTextProps> = ({
+  urn,
   children,
   emptyValueLabel = '',
   defaultValue,
@@ -104,32 +109,38 @@ export const EditableText: React.FC<EditableTextProps> = ({
 
   return (
     <span className="inline-flex items-center">
-      <OsdsText
+      <ManagerText
+        urn={urn}
+        action={'vrackServices:apiovh:resource/get'}
         level={ODS_TEXT_LEVEL.body}
         size={children ? ODS_TEXT_SIZE._800 : ODS_TEXT_SIZE._300}
         color={ODS_THEME_COLOR_INTENT.text}
       >
         {children ?? emptyValueLabel}
-      </OsdsText>
-      <OsdsButton
-        className="ml-2"
-        inline
-        circle
-        color={ODS_THEME_COLOR_INTENT.primary}
-        variant={ODS_BUTTON_VARIANT.ghost}
-        type={ODS_BUTTON_TYPE.button}
-        size={ODS_BUTTON_SIZE.sm}
-        {...handleClick(() => {
-          setEditStatus('editing');
-        })}
-        disabled={disabled || undefined}
-      >
-        <OsdsIcon
+      </ManagerText>
+      {urn && (
+        <ManagerButton
+          urn={urn}
+          action={'vrackServices:apiovh:resource/edit'}
+          className="ml-2"
+          inline
+          circle
           color={ODS_THEME_COLOR_INTENT.primary}
-          name={ODS_ICON_NAME.PEN}
-          size={ODS_ICON_SIZE.xs}
-        />
-      </OsdsButton>
+          variant={ODS_BUTTON_VARIANT.ghost}
+          type={ODS_BUTTON_TYPE.button}
+          size={ODS_BUTTON_SIZE.sm}
+          {...handleClick(() => {
+            setEditStatus('editing');
+          })}
+          disabled={disabled || undefined}
+        >
+          <OsdsIcon
+            color={ODS_THEME_COLOR_INTENT.primary}
+            name={ODS_ICON_NAME.PEN}
+            size={ODS_ICON_SIZE.xs}
+          />
+        </ManagerButton>
+      )}
     </span>
   );
 };
