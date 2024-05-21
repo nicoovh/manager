@@ -4,13 +4,12 @@ import React, {
   ForwardRefExoticComponent,
   HTMLAttributes,
 } from 'react';
-import { JSX } from '@ovhcloud/ods-components';
+import { JSX, ODS_TEXT_LEVEL, ODS_TEXT_SIZE } from '@ovhcloud/ods-components';
 import {
   OsdsText,
   OsdsTooltip,
   OsdsTooltipContent,
 } from '@ovhcloud/ods-components/react';
-import { ODS_TEXT_LEVEL, ODS_TEXT_SIZE } from '@ovhcloud/ods-components';
 import { ODS_THEME_COLOR_INTENT } from '@ovhcloud/ods-common-theming';
 import { StyleReactProps } from '@ovhcloud/ods-components/react/dist/types/react-component-lib/interfaces';
 import { useTranslation } from 'react-i18next';
