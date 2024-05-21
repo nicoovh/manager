@@ -34,6 +34,7 @@ export type OnboardingLayoutProps = PropsWithChildren<{
     height?: number;
   };
   isActionDisabled?: boolean;
+  containerClass?: string;
 }>;
 
 export const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
@@ -48,9 +49,10 @@ export const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
   onOrderButtonClick,
   img,
   isActionDisabled,
+  containerClass,
 }) => {
   return (
-    <div className="flex flex-col mx-auto px-3">
+    <div className={`flex flex-col mx-auto px-3 ${containerClass ?? ''}`}>
       {!hideHeadingSection && (
         <section className="flex flex-col items-center">
           <div className="flex justify-center py-3 max-h-28">
