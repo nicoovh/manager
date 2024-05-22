@@ -12,16 +12,18 @@ import { useAuthorizationIam } from '../../hooks/iam';
 export type ManagerButtonProps = PropsWithChildren<{
   iamActions?: string[];
   urn?: string;
+  isIamTrigger?: boolean;
 }>;
 
 export const ManagerButton = ({
   children,
   iamActions,
   urn,
+  isIamTrigger = false,
   ...restProps
 }: ManagerButtonProps & any) => {
   const { t } = useTranslation('iam');
-  const { isAuthorized } = useAuthorizationIam(iamActions, urn);
+  const { isAuthorized } = useAuthorizationIam(iamActions, urn, isIamTrigger);
 
   if (!isAuthorized) {
     return (

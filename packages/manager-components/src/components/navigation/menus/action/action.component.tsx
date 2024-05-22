@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect } from 'react';
+import React from 'react';
 import { ODS_THEME_COLOR_INTENT } from '@ovhcloud/ods-common-theming';
 import {
   ODS_BUTTON_VARIANT,
@@ -40,11 +40,18 @@ export interface ActionMenuProps {
   isIamTrigger?: boolean;
 }
 
-const MenuItem = ({ item }: any) => {
+const MenuItem = ({
+  item,
+  isTrigger,
+}: {
+  item: ActionMenuItem;
+  isTrigger: boolean;
+}) => {
   return (
     <OsdsMenuItem key={item.id}>
       <ManagerButton
-        action={[item.action]}
+        isIamTrigger={isTrigger}
+        iamActions={[item.actionIam]}
         urn={item.urn}
         size={ODS_BUTTON_SIZE.sm}
         color={ODS_THEME_COLOR_INTENT.primary}
@@ -98,10 +105,9 @@ export const ActionMenu: React.FC<ActionMenuProps> = ({
         </span>
       </OsdsButton>
 
-      {isTrigger &&
-        items.map((item) => {
-          return <MenuItem isTrigger={isTrigger} item={item} />;
-        })}
+      {items.map((item) => {
+        return <MenuItem isTrigger={isTrigger} item={item} />;
+      })}
     </OsdsMenu>
   );
 };

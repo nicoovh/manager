@@ -4,13 +4,14 @@ import { ManagerText, ManagerTextProps } from './ManagerText';
 import { render } from '../../utils/test.provider';
 import fr_FR from './translations/Messages_fr_FR.json';
 import { useAuthorizationIam } from '../../hooks/iam';
+import { IamAuthorizationResponse } from '../../hooks/iam/iam.interface';
 
 jest.mock('../../hooks/iam');
 
 const renderComponent = (props: ManagerTextProps) => {
   return render(<ManagerText {...props} />);
 };
-const mockedUseCustomHook = useAuthorizationIam as jest.Mock<object>;
+const mockedHook = useAuthorizationIam as jest.Mock<IamAuthorizationResponse>;
 
 describe('ManagerText tests', () => {
   afterEach(() => {
@@ -19,7 +20,11 @@ describe('ManagerText tests', () => {
 
   describe('should display manager text', () => {
     it('with true value for useAuthorizationIam', () => {
-      mockedUseCustomHook.mockReturnValue({ isAuthorized: true });
+      mockedHook.mockReturnValue({
+        isAuthorized: true,
+        isLoading: true,
+        isFetched: true,
+      });
       renderComponent({
         urn: 'urn:v9:eu:resource:manager-components:vrz-a878-dsflkds-fdsfsd',
         iamAction: 'manager-components:apiovh:manager-components/get-display',
@@ -30,7 +35,11 @@ describe('ManagerText tests', () => {
   });
   describe('should display error manager text', () => {
     it('with false value for useAuthorizationIam', () => {
-      mockedUseCustomHook.mockReturnValue({ isAuthorized: false });
+      mockedHook.mockReturnValue({
+        isAuthorized: false,
+        isLoading: true,
+        isFetched: true,
+      });
       renderComponent({
         urn: 'urn:v9:eu:resource:manager-components:vrz-a878-dsflkds-fdsfsd',
         iamAction: 'manager-components:apiovh:manager-components/get-display',

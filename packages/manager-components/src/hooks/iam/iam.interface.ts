@@ -15,3 +15,9 @@ export interface PageInterface {
 export interface PageReduceIam {
   [key: string]: PageInterface;
 }
+
+export interface IamAuthorizationResponse {
+  isAuthorized: boolean;
+  isLoading: boolean;
+  isFetched: boolean;
+}

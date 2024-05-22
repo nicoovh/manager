@@ -4,17 +4,22 @@ import { ActionMenu, ActionMenuProps } from './action.component';
 import { render } from '../../../../utils/test.provider';
 import '@testing-library/jest-dom';
 import { useAuthorizationIam } from '../../../../hooks/iam';
+import { IamAuthorizationResponse } from '../../../../hooks/iam/iam.interface';
 
 jest.mock('../../../../hooks/iam');
 
 const setupSpecTest = async (customProps?: Partial<ActionMenuProps>) =>
   waitFor(() => render(<ActionMenu {...actionMenu} {...customProps} />));
 
-const mockedUseCustomHook = useAuthorizationIam as jest.Mock<object>;
+const mockedHook = useAuthorizationIam as jest.Mock<IamAuthorizationResponse>;
 
 describe('ActionMenu', () => {
   it('renders menu actions correctly', async () => {
-    mockedUseCustomHook.mockReturnValue({ isAuthorized: true });
+    mockedHook.mockReturnValue({
+      isAuthorized: true,
+      isLoading: true,
+      isFetched: true,
+    });
     await setupSpecTest();
 
     const action1 = screen.getByText('Action 1');
@@ -27,7 +32,11 @@ describe('ActionMenu', () => {
   });
 
   it('renders compact menu correctly', async () => {
-    mockedUseCustomHook.mockReturnValue({ isAuthorized: true });
+    mockedHook.mockReturnValue({
+      isAuthorized: true,
+      isLoading: true,
+      isFetched: true,
+    });
     await setupSpecTest({ isCompact: true });
     const actionMenuIcon = screen.getByTestId('action-menu-icon');
     expect(actionMenuIcon.getAttribute('name')).toBe('ellipsis');
