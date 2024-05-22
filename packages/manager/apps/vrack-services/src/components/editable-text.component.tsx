@@ -3,7 +3,6 @@ import {
   OsdsInput,
   OsdsButton,
   OsdsIcon,
-  OsdsText,
 } from '@ovhcloud/ods-components/react';
 import {
   ODS_INPUT_SIZE,
@@ -111,7 +110,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
     <span className="inline-flex items-center">
       <ManagerText
         urn={urn}
-        action={'vrackServices:apiovh:resource/get'}
+        iamAction={'vrackServices:apiovh:resource/get'}
         level={ODS_TEXT_LEVEL.body}
         size={children ? ODS_TEXT_SIZE._800 : ODS_TEXT_SIZE._300}
         color={ODS_THEME_COLOR_INTENT.text}
@@ -121,7 +120,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
       {urn && (
         <ManagerButton
           urn={urn}
-          action={'vrackServices:apiovh:resource/edit'}
+          iamActions={['vrackServices:apiovh:resource/edit']}
           className="ml-2"
           inline
           circle

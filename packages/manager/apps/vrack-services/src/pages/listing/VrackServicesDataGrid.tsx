@@ -15,7 +15,7 @@ import {
   useDataGrid,
   ManagerButton,
 } from '@ovhcloud/manager-components';
-import { OsdsButton, OsdsIcon } from '@ovhcloud/ods-components/react';
+import { OsdsIcon } from '@ovhcloud/ods-components/react';
 import { ODS_THEME_COLOR_INTENT } from '@ovhcloud/ods-common-theming';
 import {
   ODS_BUTTON_SIZE,
@@ -39,7 +39,7 @@ const ActionCell: React.FC<VrackServicesWithIAM> = (vs) => {
   return (
     <ManagerButton
       urn={vs.iam.urn}
-      action={'vrackServices:apiovh:resource/edit'}
+      iamActions={['vrackServices:apiovh:resource/edit']}
       inline
       circle
       color={ODS_THEME_COLOR_INTENT.error}

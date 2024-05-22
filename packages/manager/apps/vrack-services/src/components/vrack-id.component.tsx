@@ -6,7 +6,7 @@ import {
   ODS_BUTTON_TYPE,
   ODS_BUTTON_VARIANT,
 } from '@ovhcloud/ods-components';
-import { OsdsLink, OsdsButton } from '@ovhcloud/ods-components/react';
+import { OsdsLink } from '@ovhcloud/ods-components/react';
 import {
   ActionMenu,
   ActionMenuItem,
@@ -47,7 +47,7 @@ export const VrackId: React.FC<VrackServicesWithIAM & {
     {
       id: 1,
       urn: vs.iam.urn,
-      action: 'vrackServices:apiovh:storageNetApp/detach',
+      actionIam: 'vrackServices:apiovh:storageNetApp/detach',
       label: tDashboard('vrackActionDissociate'),
       onClick: () => {
         trackClick({
@@ -62,6 +62,31 @@ export const VrackId: React.FC<VrackServicesWithIAM & {
             .replace(':vrackId', vs.currentState.vrackId),
         );
       },
+    },
+    {
+      id: 2,
+      urn: vs.iam.urn,
+      actionIam: 'vrackServices:apiovh:iam/resource/tag/remove',
+      label: 'tag remove',
+    },
+    {
+      id: 3,
+      urn: vs.iam.urn,
+      actionIam: 'vrackServices:apiovh:vrack/attach',
+      label: 'attach',
+    },
+
+    {
+      id: 4,
+      urn: vs.iam.urn,
+      actionIam: 'vrackServices:apiovh:resource/task/get',
+      label: 'task get',
+    },
+    {
+      id: 5,
+      urn: vs.iam.urn,
+      actionIam: 'vrackServices:apiovh:resource/eligibleManagedService/get',
+      label: 'manage service',
     },
   ];
 
@@ -88,7 +113,7 @@ export const VrackId: React.FC<VrackServicesWithIAM & {
 
   return (
     <ManagerButton
-      action={'vrackServices:apiovh:vrack/attach'}
+      iamActions={['vrackServices:apiovh:vrack/attach']}
       urn={vs.iam.urn}
       inline
       color={ODS_THEME_COLOR_INTENT.primary}
