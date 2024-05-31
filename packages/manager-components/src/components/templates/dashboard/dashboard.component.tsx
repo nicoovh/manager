@@ -10,6 +10,8 @@ export interface DashboardLayoutProps {
   linkProps?: LinksProps;
   tabs?: React.ReactElement;
   onClickReturn?: () => void;
+  containerClass?: string;
+  tabContainerClass?: string;
 }
 
 export const DashboardLayout = ({
@@ -19,9 +21,11 @@ export const DashboardLayout = ({
   onClickReturn,
   header,
   tabs,
+  containerClass = 'm-8',
+  tabContainerClass = ''
 }: DashboardLayoutProps) => {
   return (
-    <div className="m-8">
+    <div className={containerClass}>
       <div className="mb-3">{breadcrumb}</div>
       {header && (
         <Headers
@@ -39,7 +43,7 @@ export const DashboardLayout = ({
           type={linkProps.type}
         />
       )}
-      <div>{tabs}</div>
+      <div className={tabContainerClass}>{tabs}</div>
       <div className="mt-8">{content}</div>
     </div>
   );
