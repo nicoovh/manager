@@ -28,6 +28,7 @@ export interface ActionMenuItem {
   target?: OdsHTMLAnchorElementTarget;
   onClick?: () => void;
   label: ReactI18NextChild | Iterable<ReactI18NextChild>;
+  color?: ODS_THEME_COLOR_INTENT;
 }
 
 export interface ActionMenuProps {
@@ -67,7 +68,7 @@ export const ActionMenu: React.FC<ActionMenuProps> = ({ items, isCompact }) => {
         <OsdsMenuItem key={item.id}>
           <OsdsButton
             size={ODS_BUTTON_SIZE.sm}
-            color={ODS_THEME_COLOR_INTENT.primary}
+            color={item.color || ODS_THEME_COLOR_INTENT.primary}
             variant={ODS_BUTTON_VARIANT.ghost}
             href={item.href}
             rel={item.rel}
