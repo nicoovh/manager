@@ -4,16 +4,23 @@
 
 .sidebar {
   @import '@ovh-ux/manager-hub/src/variables.scss';
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  min-height: 100%;
   background-color: $p-700;
   position: relative;
-  width: 20rem;
-  height: auto;
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  min-width: 20rem;
   color: white;
+  
+  &Wrapper {
+    display: flex;
+    height: fit-content;
+    width: 20rem;
+    min-width: 20rem;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
 
   &_short {
     width: 4.5rem;

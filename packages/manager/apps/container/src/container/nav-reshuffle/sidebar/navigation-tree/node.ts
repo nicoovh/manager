@@ -12,6 +12,7 @@ export enum NodeTag {
 export type Node = {
   children?: Node[];
   parent?: Node;
+  universe?: Node;
   count?: number | boolean;
   id?: string;
   path?: string;

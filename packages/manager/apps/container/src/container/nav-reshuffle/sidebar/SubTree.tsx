@@ -116,8 +116,7 @@ const SubTree = ({
   }, [defaultPciProject, defaultPciProjectStatus, pciProjects]);
 
   return (
-    <div className={style.subtree}>
-      <div
+    <div
         className={style.subtree_content}
         onMouseOver={() => handleOnMouseOver(rootNode)}
         onMouseLeave={handleBackNavigation}
@@ -227,7 +226,6 @@ const SubTree = ({
           </ul>
         </div>
       </div>
-    </div>
   );
 };
 

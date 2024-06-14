@@ -1,5 +1,7 @@
 import illustration from '@/assets/images/sidebar/web-cloud.png';
-export default {
+import { Node } from "../node";
+
+const webCloudUniverse : Node = {
   id: 'web-cloud',
   translation: 'sidebar_web_cloud',
   shortTranslation: 'sidebar_web_cloud_short',
@@ -8,16 +10,20 @@ export default {
     application: 'web',
     hash: '#/',
   },
-  features: ['web'],
-  children: [
+  features: ['web']
+};
+
+webCloudUniverse.children = [
     {
       id: 'domain-dns',
+      universe: webCloudUniverse,
       translation: 'sidebar_domain_dns',
       features: ['web:domains', 'web:domains:zone'],
       count: false,
       children: [
         {
           id: 'domains-operations',
+          universe: webCloudUniverse,
           translation: 'sidebar_domain_operations',
           routing: {
             application: 'web',
@@ -28,6 +34,7 @@ export default {
         },
         {
           id: 'domains',
+          universe: webCloudUniverse,
           translation: 'sidebar_domain',
           serviceType: 'DOMAIN',
           routing: {
@@ -38,6 +45,7 @@ export default {
         },
         {
           id: 'dns',
+          universe: webCloudUniverse,
           translation: 'sidebar_dns',
           serviceType: 'DOMAIN_ZONE',
           routing: {
@@ -50,11 +58,13 @@ export default {
     },
     {
       id: 'web-hosting',
+      universe: webCloudUniverse,
       translation: 'sidebar_web_hosting',
       features: ['hosting', 'private-database'],
       children: [
         {
           id: 'hosting',
+          universe: webCloudUniverse,
           translation: 'sidebar_hosting',
           serviceType: 'HOSTING_WEB',
           routing: {
@@ -65,6 +75,7 @@ export default {
         },
         {
           id: 'web-databases',
+          universe: webCloudUniverse,
           translation: 'sidebar_web_db',
           serviceType: 'HOSTING_PRIVATEDATABASE',
           routing: {
@@ -77,10 +88,12 @@ export default {
     },
     {
       id: 'web-paas',
+      universe: webCloudUniverse,
       translation: 'sidebar_web_paas',
       children: [
         {
           id: 'platform-sh',
+          universe: webCloudUniverse,
           translation: 'sidebar_platform_sh',
           serviceType: 'WEBPAAS_SUBSCRIPTION',
           routing: {
@@ -94,12 +107,14 @@ export default {
     },
     {
       id: 'emails',
+      universe: webCloudUniverse,
       label: 'Emails',
       translation: 'sidebar_emails',
       features: ['email-pro', 'emails:mxplan'],
       children: [
         {
           id: 'email-pro',
+          universe: webCloudUniverse,
           translation: 'sidebar_email_pro',
           serviceType: 'EMAIL_PRO',
           routing: {
@@ -110,6 +125,7 @@ export default {
         },
         {
           id: 'mxplan',
+          universe: webCloudUniverse,
           translation: 'sidebar_mxplan',
           serviceType: 'EMAIL_DOMAIN',
           routing: {
@@ -120,6 +136,7 @@ export default {
         },
         {
           id: 'email-delegated',
+          universe: webCloudUniverse,
           translation: 'sidebar_email_delegated',
           serviceType: 'EMAIL_DELEGATED',
           routing: {
@@ -132,11 +149,13 @@ export default {
     },
     {
       id: 'microsoft',
+      universe: webCloudUniverse,
       translation: 'sidebar_microsoft',
       features: ['office', 'exchange', 'sharepoint'],
       children: [
         {
           id: 'office',
+          universe: webCloudUniverse,
           translation: 'sidebar_license_office',
           serviceType: 'LICENSE_OFFICE',
           routing: {
@@ -147,6 +166,7 @@ export default {
         },
         {
           id: 'exchange',
+          universe: webCloudUniverse,
           translation: 'sidebar_exchange',
           serviceType: 'EMAIL_EXCHANGE_SERVICE',
           routing: {
@@ -157,6 +177,7 @@ export default {
         },
         {
           id: 'sharepoint',
+          universe: webCloudUniverse,
           translation: 'sidebar_sharepoint',
           serviceType: 'MSSERVICES_SHAREPOINT',
           routing: {
@@ -167,5 +188,6 @@ export default {
         },
       ],
     },
-  ],
-};
+  ];
+
+export default webCloudUniverse;
