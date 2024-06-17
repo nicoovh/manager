@@ -1,9 +1,4 @@
-import filter from 'lodash/filter';
-import isEmpty from 'lodash/isEmpty';
-import map from 'lodash/map';
-import remove from 'lodash/remove';
-import set from 'lodash/set';
-import some from 'lodash/some';
+import DNS_STATUS from './domain-dns.constants';
 
 export default class DomainDnsCtrl {
   /* @ngInject */
@@ -19,6 +14,8 @@ export default class DomainDnsCtrl {
     WucValidator,
     constants,
     goToDnsAnycast,
+    goToTerminateAnycast,
+    goToDnsModify,
   ) {
     this.$scope = $scope;
     this.$filter = $filter;
@@ -31,6 +28,8 @@ export default class DomainDnsCtrl {
     this.WucValidator = WucValidator;
     this.constants = constants;
     this.goToDnsAnycast = goToDnsAnycast;
+    this.goToTerminateAnycast = goToTerminateAnycast;
+    this.goToDnsModify = goToDnsModify;
   }
 
   $onInit() {
@@ -39,26 +38,23 @@ export default class DomainDnsCtrl {
     this.atLeastOneToRemove = true;
     this.dns = {
       original: null,
-      table: null,
-      activeDns: null,
-    };
-    this.dnsStatus = {
-      isHosted: null,
-      isOk: null,
+      nameServers: null,
+      isAnycastSubscribed: false,
+      isUpdatingNameServers: false,
     };
     this.isDnssecEnable = false;
-    this.editMode = false;
     this.loading = {
-      add: false,
       all: false,
-      table: false,
+      nameServers: false,
     };
     this.urls = {
       zoneCheck: this.constants.urls.TOOLS.ZONE_CHECK,
     };
 
+    this.constants.DNS_STATUS = DNS_STATUS;
+
     this.$scope.$on('Domain.Dns.Reload', () => this.init());
-    this.$scope.loadTable = () => this.loadTable();
+    this.$scope.getDns = () => this.getDns();
 
     this.$q
       .all({
@@ -82,161 +78,161 @@ export default class DomainDnsCtrl {
       .then((domain) => {
         this.domain = domain;
         this.isDnssecEnable = domain.dnssecStatus === 'ENABLED';
-        this.loadTable();
+        this.getDns();
+        this.hasAnycast();
       })
       .catch(() => {
         this.loading.all = false;
       });
   }
 
-  loadTable(forceRefresh = false) {
-    this.loading.table = true;
-    this.dns.table = [];
-    return this.Domain.getTabDns(this.$stateParams.productId, forceRefresh)
-      .then(({ data: tabDns }) => {
-        this.dns.table = { dns: tabDns };
-        this.dns.original = angular.copy(this.dns.table);
-        this.dns.activeDns = this.$filter('filter')(this.dns.table.dns, {
-          isUsed: true,
-          toDelete: false,
-        }).length;
-        this.checkPendingPropagation(this.dns.table.dns);
-        return this.$q.all(
-          map(tabDns.dns, (nameServer) =>
-            this.Domain.getNameServerStatus(
-              this.$stateParams.productId,
-              nameServer.id,
-            ),
-          ),
-        );
-      })
-      .then((nameServersStatus) => {
-        if (!isEmpty(nameServersStatus)) {
-          this.dnsStatus.isOk = !some(nameServersStatus, { state: 'ko' });
-          this.dnsStatus.isHosted = !some(nameServersStatus, {
-            type: 'external',
+  getDns() {
+    this.loading.nameServers = true;
+    this.dns.nameServers = [];
+
+    return this.Domain.getResource(this.$stateParams.productId)
+      .then((data) => {
+        const resource = data;
+
+        // TODO: to delete when schemas are prodded
+        resource.currentState.dnsConfiguration = {
+          minDNS: '2',
+          maxDNS: '8',
+          hostSupported: true,
+          glueRecordIPv6Supported: true,
+          configurationType: 'mixed',
+          nameServers: [
+            {
+              nameServerType: 'external',
+              nameServer: 'ns1.iptwins.net',
+            },
+            {
+              nameServerType: 'external',
+              nameServer: 'ns1.example.fr',
+              ipv6: '2001:0000:130F:0000:0000:09C0:876A:130B',
+            },
+          ],
+        };
+
+        resource.targetSpec.dnsConfiguration = {
+          nameServers: [
+            {
+              nameServer: 'ns2.example.fr',
+              ipv4: '1.2.3.4',
+            },
+            {
+              nameServer: 'ns1.example.fr',
+              ipv6: '2001:0000:130F:0000:0000:09C0:876A:130B',
+            },
+          ],
+        };
+        // end TODO
+
+        /* 
+        The name servers statuses should be computed from the resource targetSpec 
+        and currentState, just as in the following example:
+        ------------------------------------------------------------------
+        CurrentState     TargetSpec          Status
+        ------------------------------------------------------------------
+        ns1.toto.fr      ns1.toto.fr         - ns1.toto.fr      Enabled
+        ns2.toto.fr      ns2.toto.fr         - ns2.toto.fr      Enabled
+        ------------------------------------------------------------------
+        ns1.toto.fr      dns111.ovh.net      - ns1.toto.fr      Deleting   
+        ns2.toto.fr      dns111.ovh.net      - ns2.toto.fr      Deleting   
+                                             - dns111.ovh.net   Activating 
+                                             - ns111.ovh.net    Activating 
+        ------------------------------------------------------------------
+        ns1.toto.fr      ns1.toto.fr         - ns1.toto.fr      Enabled    
+        ns2.toto.fr      ns3.toto.fr         - ns2.toto.fr      Deleting   
+                                             - ns3.toto.fr      Activating
+        ------------------------------------------------------------------
+        ns1.toto.fr      []                  - ns1.toto.fr      Deleting
+        ns2.toto.fr                          - ns2.toto.fr      Deleting
+        ------------------------------------------------------------------
+        */
+
+        const currentStateNameServers =
+          resource.currentState?.dnsConfiguration?.nameServers || [];
+
+        const targetSpecNameServers =
+          resource.targetSpec?.dnsConfiguration?.nameServers || [];
+
+        // Find out if a given name server item is present in another array
+        const arrayContains = (otherArray, item) => {
+          return otherArray.some(
+            (otherArrayItem) =>
+              item.nameServer === otherArrayItem.nameServer &&
+              item.ipv4 === otherArrayItem.ipv4 &&
+              item.ipv6 === otherArrayItem.ipv6,
+          );
+        };
+
+        if (currentStateNameServers) {
+          currentStateNameServers.forEach((ns) => {
+            const nameServer = {
+              name: ns.nameServer,
+              ip: '',
+              status: DNS_STATUS.ACTIVATED,
+            };
+
+            if (ns.ipv4) {
+              nameServer.ip = ns.ipv4;
+            } else if (ns.ipv6) {
+              nameServer.ip = ns.ipv6;
+            }
+
+            if (!arrayContains(targetSpecNameServers, ns)) {
+              nameServer.status = DNS_STATUS.DELETING;
+            }
+
+            this.dns.nameServers.push(nameServer);
           });
         }
+
+        if (targetSpecNameServers) {
+          targetSpecNameServers.forEach((ns) => {
+            if (arrayContains(currentStateNameServers, ns)) {
+              // If the name server is also present in the currentState,
+              // we do not want to add it a second time
+              return;
+            }
+
+            const nameServer = {
+              name: ns.nameServer,
+              ip: '',
+              status: DNS_STATUS.ADDING,
+            };
+
+            if (ns.ipv4) {
+              nameServer.ip = ns.ipv4;
+            } else if (ns.ipv6) {
+              nameServer.ip = ns.ipv6;
+            }
+
+            this.dns.nameServers.push(nameServer);
+          });
+        }
+
+        // Check if there is a pending update of the name servers
+        this.dns.nameServers.forEach((ns) => {
+          if (ns.status !== DNS_STATUS.ACTIVATED) {
+            this.dns.isUpdatingNameServers = true;
+          }
+        });
       })
       .finally(() => {
         this.loading.all = false;
-        this.loading.table = false;
       });
   }
 
-  activeEditMode() {
-    this.editMode = true;
-  }
-
-  addNewLine() {
-    return (
-      this.dns.table.dns.length >= 10 ||
-      this.dns.table.dns.push({ editedHost: '', editedIp: '' })
+  hasAnycast() {
+    return this.Domain.getDnsAnycast(this.$stateParams.productId).then(
+      (data) => {
+        if (data?.status === 'enabled') {
+          this.dns.isAnycastSubscribed = true;
+        }
+      },
     );
-  }
-
-  removeLine(item) {
-    remove(this.dns.table.dns, item);
-    const filtered = filter(
-      this.dns.table.dns,
-      (currentDNS) => !currentDNS.toDelete,
-    );
-    this.atLeastOneToRemove = this.dns.table.dns && filtered.length > 1;
-  }
-
-  cancelDns() {
-    this.dns.table.dns = angular.copy(this.dns.original.dns);
-    this.atLeastOneDns = true;
-    this.atLeastOneToRemove = true;
-    this.editMode = false;
-  }
-
-  checkAtLeastOneDns() {
-    const filtered = filter(
-      this.dns.table.dns,
-      (currentDNS) =>
-        !currentDNS.toDelete &&
-        ((currentDNS.host && currentDNS.editedHost == null) ||
-          (currentDNS.editedHost && currentDNS.editedHost !== '')),
-    );
-    this.atLeastOneDns = this.dns.table.dns && filtered.length > 0;
-  }
-
-  hostCheck(input) {
-    const value = input.$viewValue;
-    input.$setValidity(
-      'domain',
-      value === '' || this.WucValidator.isValidDomain(value),
-    );
-  }
-
-  ipCheck(input) {
-    const value = input.$viewValue;
-    input.$setValidity(
-      'ip',
-      value === '' ||
-        this.WucValidator.isValidIpv4(value) ||
-        this.WucValidator.isValidIpv6(value),
-    );
-  }
-
-  dnsLock() {
-    this.$scope.currentAction = 'dns/lock/domain-dns-lock';
-    this.$scope.currentActionData = false;
-    $('#currentAction').modal({
-      keyboard: true,
-      backdrop: 'static',
-    });
-  }
-
-  saveDns() {
-    let dns = filter(
-      this.dns.table.dns,
-      (currentDNS) => currentDNS.editedHost !== '' || currentDNS.editedIp,
-    );
-
-    if (!isEmpty(dns)) {
-      this.loading.table = true;
-      dns = map(dns, (d) => ({
-        host: d.editedHost || d.host,
-        ip: d.editedIp || (d.editedIp === '' ? null : d.ip),
-      }));
-
-      this.$q
-        .when(
-          this.domain.managedByOvh
-            ? this.Domain.updateNameServerType(
-                this.$stateParams.productId,
-                'external',
-              )
-            : null,
-        )
-        .then(() => {
-          this.domain.managedByOvh = false;
-          return this.Domain.updateDnsNameServerList(
-            this.$stateParams.productId,
-            dns,
-          );
-        })
-        .catch((err) => {
-          set(err, 'type', err.type || 'ERROR');
-          this.Alerter.alertFromSWS(
-            this.$translate.instant('domain_tab_DNS_update_error'),
-            err,
-            this.$scope.alerts.main,
-          );
-        })
-        .finally(() => {
-          this.editMode = false;
-          this.loadTable();
-        });
-    }
-
-    this.dns.table.dns = filter(
-      this.dns.table.dns,
-      (currentDNS) => currentDNS.host || currentDNS.ip,
-    );
-    this.editMode = false;
   }
 
   checkPendingPropagation(dnsServers) {
