@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { applyFilters, Filter } from '@ovh-ux/manager-core-api';
 import { useMemo } from 'react';
+import { useCatalogPrice, useProject } from '@ovhcloud/manager-components';
 import {
   deleteVolume,
   getAllVolumes,
@@ -14,6 +15,9 @@ import {
 } from '@/api/data/volume';
 import queryClient from '@/queryClient';
 import { useTranslatedMicroRegions } from '@/hooks/useTranslatedMicroRegions';
+import { useCatalog } from '@/api/hooks/useCatalog';
+import { TPricing } from '@/api/data/catalog';
+import { UCENTS_FACTOR } from '@/hooks/currency-constants';
 
 export const useAllVolumes = (projectId: string) => {
   const { translateRegion } = useTranslatedMicroRegions();
@@ -88,11 +92,13 @@ export const getVolumeQueryKey = (projectId: string, volumeId: string) => [
   volumeId,
 ];
 
+export const getVolumeQuery = (projectId: string, volumeId: string) => ({
+  queryKey: getVolumeQueryKey(projectId, volumeId),
+  queryFn: (): Promise<TVolume> => getVolume(projectId, volumeId),
+});
+
 export const useVolume = (projectId: string, volumeId: string) =>
-  useQuery({
-    queryKey: getVolumeQueryKey(projectId, volumeId),
-    queryFn: (): Promise<TVolume> => getVolume(projectId, volumeId),
-  });
+  useQuery({ ...getVolumeQuery(projectId, volumeId) });
 
 export const getVolumeSnapshotQueryKey = (projectId: string) => [
   'volume-snapshot',
@@ -121,11 +127,13 @@ export const useDeleteVolume = ({
   const mutation = useMutation({
     mutationFn: async () => deleteVolume(projectId, volumeId),
     onError,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: getVolumeQueryKey(projectId, volumeId),
       });
-      // @TODO invalidate list of volumes
+      await queryClient.invalidateQueries({
+        queryKey: ['project', projectId, 'volumes'],
+      });
       onSuccess();
     },
   });
@@ -133,4 +141,71 @@ export const useDeleteVolume = ({
     deleteVolume: () => mutation.mutate(),
     ...mutation,
   };
+};
+
+export const convertUcentsToCurrency = (value: number, interval = 1) =>
+  value / interval / UCENTS_FACTOR;
+
+export const usePriceTransformer = () => {
+  const { getFormattedCatalogPrice } = useCatalogPrice();
+  return (price: TPricing, currencyCode: string) => ({
+    ...price,
+    priceInUcents: price.price,
+    intervalUnit: price.interval,
+    price: {
+      currencyCode,
+      text: getFormattedCatalogPrice(price.price),
+      value: convertUcentsToCurrency(price.price),
+    },
+  });
+};
+
+export const useGetVolumePrice = (projectId: string, volumeId: string) => {
+  const { data: volume } = useVolume(projectId, volumeId);
+  const { data: project } = useProject(projectId);
+  const { data: catalog } = useCatalog();
+  const priceFormatter = usePriceTransformer();
+  const relatedCatalog: Record<string, TPricing> = useMemo(() => {
+    if (!catalog || !project || !volume) {
+      return {};
+    }
+    const projectPlan = catalog.plans.find((plan) => {
+      console.log(plan);
+      return plan.planCode === project.planCode;
+    });
+    if (!projectPlan) {
+      console.log('Fail to get project plan');
+      return {};
+    }
+    const pricesMap = {};
+    projectPlan.addonFamilies.forEach((family) => {
+      family.addons.forEach((planCode) => {
+        const addon = catalog.addons.find(
+          (addonCatalog) => addonCatalog.planCode === planCode,
+        );
+        const pricing =
+          addon.pricings.find(
+            ({ capacities }) =>
+              capacities.includes('renew') ||
+              capacities.includes('consumption'),
+          ) || ({} as TPricing);
+        pricesMap[planCode] = priceFormatter(
+          pricing,
+          catalog.locale.currencyCode,
+        );
+      });
+    });
+    return pricesMap;
+  }, [catalog, project, volume]);
+
+  return useMemo(() => {
+    if (!relatedCatalog?.length) {
+      return {};
+    }
+    const productCatalog: TPricing =
+      relatedCatalog[`volume.${volume.type}.consumption.${volume.region}`] ||
+      relatedCatalog[`volume.${volume.type}.consumption`];
+
+    return {};
+  }, [volume, project, catalog, relatedCatalog]);
 };

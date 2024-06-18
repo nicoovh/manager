@@ -29,6 +29,7 @@ export default function ActionsComponent({
   projectUrl,
 }: Readonly<ActionsProps>) {
   const { t } = useTranslation();
+  const hrefEdit = useHref(`./${volume.id}/edit`);
   const hrefRemove = useHref(`./delete/${volume.id}`);
   const hrefCreateBackup = `${projectUrl}/storages/volume-backup/create?volume=${volume.id}`;
 
@@ -51,6 +52,25 @@ export default function ActionsComponent({
           size={ODS_BUTTON_SIZE.sm}
           variant={ODS_BUTTON_VARIANT.ghost}
           color={ODS_THEME_COLOR_INTENT.primary}
+          data-testid={'actionComponent-edit-button'}
+          href={hrefEdit}
+        >
+          <OsdsText
+            size={ODS_THEME_TYPOGRAPHY_SIZE._500}
+            level={ODS_TEXT_LEVEL.button}
+            color={ODS_THEME_COLOR_INTENT.primary}
+            slot={'start'}
+          >
+            {t('pci_projects_project_storages_blocks_edit_label')}
+          </OsdsText>
+        </OsdsButton>
+      </OsdsMenuItem>
+      <OsdsMenuItem>
+        <OsdsButton
+          size={ODS_BUTTON_SIZE.sm}
+          variant={ODS_BUTTON_VARIANT.ghost}
+          color={ODS_THEME_COLOR_INTENT.primary}
+          data-testid={'actionComponent-create-backup-button'}
           href={hrefCreateBackup}
         >
           <OsdsText
@@ -68,6 +88,7 @@ export default function ActionsComponent({
           size={ODS_BUTTON_SIZE.sm}
           variant={ODS_BUTTON_VARIANT.ghost}
           color={ODS_THEME_COLOR_INTENT.primary}
+          data-testid={'actionComponent-remove-button'}
           href={hrefRemove}
         >
           <OsdsText

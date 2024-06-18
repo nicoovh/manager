@@ -112,3 +112,67 @@ export const deleteVolume = async (
     throw new Error(e.response?.data?.message || e.message);
   }
 };
+
+/* export const getVolumePriceEstimation = (
+  projectId: string,
+  volume: TVolume,
+  catalogEndpoint: string,
+) => {}; */
+
+/*
+  static getVolumePriceEstimationFromCatalog(catalog, storage) {
+    const relatedCatalog = get(
+      catalog,
+      storage.planCode,
+      get(
+        catalog,
+        `volume.${storage.type}.consumption.${storage.region?.name}`,
+        get(catalog, `volume.${storage.type}.consumption`),
+      ),
+    );
+
+    if (relatedCatalog) {
+      const pricesEstimation = {
+        hourly: (storage.size * relatedCatalog.priceInUcents) / 100000000,
+      };
+      pricesEstimation.monthly =
+        pricesEstimation.hourly * moment.duration(1, 'months').asHours();
+
+      return reduce(
+        pricesEstimation,
+        (result, value, key) => ({
+          ...result,
+          [key]: {
+            currencyCode: relatedCatalog.price.currencyCode,
+            text: relatedCatalog.price.text.replace(
+              /\d+(?:[.,]\d+)?/,
+              `${value.toFixed(3)}`,
+            ),
+            value,
+          },
+        }),
+        {},
+      );
+    }
+
+    return {
+      price: {},
+      monthlyPrice: {},
+    };
+  }
+ */
+
+/*
+   getVolumePriceEstimation(projectId, storage, catalogEndpoint) {
+    return this.CucPriceHelper.getPrices(
+      projectId,
+      catalogEndpoint,
+    ).then((catalog) =>
+      PciProjectStorageBlockService.getVolumePriceEstimationFromCatalog(
+        catalog,
+        storage,
+        catalogEndpoint,
+      ),
+    );
+  }
+   */
