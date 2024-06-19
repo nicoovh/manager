@@ -20,4 +20,8 @@ export default class OverTheBoxDetailsService {
       })
       .catch(() => []);
   }
+
+  getDeviceHardware(serviceName) {
+    return this.$http.get(`/overTheBox/${serviceName}/device/hardware`);
+  }
 }
