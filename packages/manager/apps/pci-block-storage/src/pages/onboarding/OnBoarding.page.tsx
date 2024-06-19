@@ -5,7 +5,6 @@ import {
   OnboardingLayout,
   PciDiscoveryBanner,
   PublicCloudProject,
-  RedirectionGuard,
 } from '@ovhcloud/manager-components';
 import {
   ODS_THEME_COLOR_INTENT,
@@ -25,7 +24,6 @@ import {
   useRouteLoaderData,
 } from 'react-router-dom';
 import { GUIDES } from './onboarding.constants';
-import { useAllVolumes } from '@/api/hooks/useVolume';
 
 export default function OnBoardingPage() {
   const { t } = useTranslation();
@@ -37,7 +35,6 @@ export default function OnBoardingPage() {
   const project = useRouteLoaderData('blocks') as PublicCloudProject;
   const [urlProject, setUrlProject] = useState('');
   const navigate = useNavigate();
-  const { data: volumes, isPending } = useAllVolumes(projectId);
 
   useEffect(() => {
     navigation
@@ -107,78 +104,72 @@ export default function OnBoardingPage() {
   ];
 
   return (
-    <RedirectionGuard
-      isLoading={isPending}
-      route={`/pci/projects/${projectId}/storages/blocks`}
-      condition={volumes?.length > 0}
-    >
-      <>
-        {project && <OsdsBreadcrumb items={breadcrumbItems} />}
+    <>
+      {project && <OsdsBreadcrumb items={breadcrumbItems} />}
 
-        {isDiscoveryProject(project) && (
-          <div className="mb-8">
-            <PciDiscoveryBanner projectId={projectId} />
-          </div>
+      {isDiscoveryProject(project) && (
+        <div className="mb-8">
+          <PciDiscoveryBanner projectId={projectId} />
+        </div>
+      )}
+      <OnboardingLayout
+        title={t('pci_projects_project_storages_blocks_title')}
+        description={
+          <>
+            <OsdsText
+              color={ODS_THEME_COLOR_INTENT.text}
+              level={ODS_TEXT_LEVEL.body}
+              size={ODS_THEME_TYPOGRAPHY_SIZE._400}
+              className="mt-8 block"
+            >
+              {tOnBoarding(
+                'pci_projects_project_storages_blocks_onboarding_content1',
+              )}
+            </OsdsText>
+            <OsdsText
+              color={ODS_THEME_COLOR_INTENT.text}
+              level={ODS_TEXT_LEVEL.body}
+              size={ODS_THEME_TYPOGRAPHY_SIZE._500}
+              className="mt-6 block"
+            >
+              {tOnBoarding(
+                'pci_projects_project_storages_blocks_onboarding_content2',
+              )}
+            </OsdsText>
+            <OsdsText
+              color={ODS_THEME_COLOR_INTENT.text}
+              level={ODS_TEXT_LEVEL.body}
+              size={ODS_THEME_TYPOGRAPHY_SIZE._400}
+              className="mt-6 block"
+            >
+              {tOnBoarding(
+                'pci_projects_project_storages_blocks_onboarding_content3',
+              )}
+            </OsdsText>
+            <OsdsText
+              color={ODS_THEME_COLOR_INTENT.text}
+              level={ODS_TEXT_LEVEL.body}
+              size={ODS_THEME_TYPOGRAPHY_SIZE._400}
+              className="mt-6 block"
+            >
+              {tOnBoarding(
+                'pci_projects_project_storages_blocks_onboarding_content4',
+              )}
+            </OsdsText>
+          </>
+        }
+        orderButtonLabel={tOnBoarding(
+          'pci_projects_project_storages_blocks_onboarding_action_label',
         )}
-        <OnboardingLayout
-          title={t('pci_projects_project_storages_blocks_title')}
-          description={
-            <>
-              <OsdsText
-                color={ODS_THEME_COLOR_INTENT.text}
-                level={ODS_TEXT_LEVEL.body}
-                size={ODS_THEME_TYPOGRAPHY_SIZE._400}
-                className="mt-8 block"
-              >
-                {tOnBoarding(
-                  'pci_projects_project_storages_blocks_onboarding_content1',
-                )}
-              </OsdsText>
-              <OsdsText
-                color={ODS_THEME_COLOR_INTENT.text}
-                level={ODS_TEXT_LEVEL.body}
-                size={ODS_THEME_TYPOGRAPHY_SIZE._500}
-                className="mt-6 block"
-              >
-                {tOnBoarding(
-                  'pci_projects_project_storages_blocks_onboarding_content2',
-                )}
-              </OsdsText>
-              <OsdsText
-                color={ODS_THEME_COLOR_INTENT.text}
-                level={ODS_TEXT_LEVEL.body}
-                size={ODS_THEME_TYPOGRAPHY_SIZE._400}
-                className="mt-6 block"
-              >
-                {tOnBoarding(
-                  'pci_projects_project_storages_blocks_onboarding_content3',
-                )}
-              </OsdsText>
-              <OsdsText
-                color={ODS_THEME_COLOR_INTENT.text}
-                level={ODS_TEXT_LEVEL.body}
-                size={ODS_THEME_TYPOGRAPHY_SIZE._400}
-                className="mt-6 block"
-              >
-                {tOnBoarding(
-                  'pci_projects_project_storages_blocks_onboarding_content4',
-                )}
-              </OsdsText>
-            </>
-          }
-          orderButtonLabel={tOnBoarding(
-            'pci_projects_project_storages_blocks_onboarding_action_label',
-          )}
-          onOrderButtonClick={() => navigate(`../new`)}
-        >
-          <aside className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 pt-12">
-            {tileItems.map((tile) => (
-              <Card key={tile.id} href={tile.href} texts={tile.texts} />
-            ))}
-          </aside>
-        </OnboardingLayout>
-        <Outlet />
-      </>
-    </RedirectionGuard>
+        onOrderButtonClick={() => navigate(`../new`)}
+      >
+        <aside className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 pt-12">
+          {tileItems.map((tile) => (
+            <Card key={tile.id} href={tile.href} texts={tile.texts} />
+          ))}
+        </aside>
+      </OnboardingLayout>
+      <Outlet />
+    </>
   );
 }

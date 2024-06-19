@@ -17,7 +17,7 @@ import { useTranslatedMicroRegions } from '@/hooks/useTranslatedMicroRegions';
 
 export const useAllVolumes = (projectId: string) => {
   const { translateRegion } = useTranslatedMicroRegions();
-  return useQuery({
+  return useQuery<TVolume[]>({
     queryKey: ['project', projectId, 'volumes'],
     queryFn: () => getAllVolumes(projectId),
     select: (data) =>

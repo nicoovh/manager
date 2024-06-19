@@ -17,8 +17,9 @@ export interface RouteHandle {
   tracking?: string;
 }
 
-const ROUTE_PATHS = {
+export const ROUTE_PATHS = {
   root: '/pci/projects/:projectId/storages/blocks',
+  onboarding: '/pci/projects/:projectId/storages/blocks/onboarding',
 };
 
 export default [
@@ -38,7 +39,7 @@ export default [
         handle: {
           tracking: 'blocks',
         },
-        ...lazyRouteConfig(() => import('@/pages/list/List.page')),
+        ...lazyRouteConfig(() => import('@/pages/Index.page')),
         children: [
           {
             path: 'delete',
@@ -63,18 +64,6 @@ export default [
             children: [],
           },
         ],
-      },
-      {
-        path: 'onboarding',
-        ...lazyRouteConfig(() => import('@/pages/onboarding/OnBoarding.page')),
-        children: [],
-      },
-      {
-        path: 'onboarding-list',
-        ...lazyRouteConfig(() =>
-          import('@/pages/onboarding/OnBoardingList.page'),
-        ),
-        children: [],
       },
     ],
   },
