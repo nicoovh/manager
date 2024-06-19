@@ -50,7 +50,7 @@ export default function Home() {
         navigateTo(redirectStrategies.error);
       }
     }
-  }, [isFetched]);
+  }, [isFetched, error]);
 
   return (
     <div className="sm:container mx-auto px-5">
