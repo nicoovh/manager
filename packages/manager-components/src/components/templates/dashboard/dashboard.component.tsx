@@ -1,47 +1,58 @@
 import React from 'react';
-
 import { Headers, HeadersProps } from '../../content';
-
-import { Links, LinksProps } from '../../typography';
+import { Description, LinkType, Links, Subtitle } from '../../typography';
 import { PageLayout } from '../layout/layout.component';
+import { useTranslation } from 'react-i18next';
+import './translations';
+
 export interface DashboardLayoutProps {
   breadcrumb?: React.ReactElement;
   content?: React.ReactElement;
   header?: HeadersProps;
-  linkProps?: LinksProps;
+  message?: React.ReactElement;
+  description?: string;
+  subtitle?: string;
+  subdescription?: string;
+  backLinkLabel?: string;
+  onBackLinkClick?: () => void;
   tabs?: React.ReactElement;
   onClickReturn?: () => void;
 }
 
 export const DashboardLayout = ({
-  linkProps,
+  backLinkLabel,
+  onBackLinkClick,
   breadcrumb,
+  description,
+  subtitle,
+  subdescription,
+  message,
   content,
-  onClickReturn,
   header,
   tabs,
 }: DashboardLayoutProps) => {
+  const { t } = useTranslation('dashboard_template');
   return (
     <PageLayout>
-      <div className="mb-3">{breadcrumb}</div>
-      {header && (
-        <Headers
-          title={header.title}
-          description={header.description}
-          headerButton={header.headerButton}
-        />
+      <div className="mb-6">{breadcrumb}</div>
+      {header && <Headers {...header} />}
+      <Links
+        className="mb-8"
+        onClickReturn={() => {
+          onBackLinkClick?.();
+          window.history.back();
+        }}
+        label={backLinkLabel || t('dashboard_template_back_link')}
+        type={LinkType.back}
+      />
+      {description && <Description className="mb-9">{description}</Description>}
+      {message && <div className="mb-8">{message}</div>}
+      {subtitle && <Subtitle className="block mb-6">{subtitle}</Subtitle>}
+      {subdescription && (
+        <Description className="mb-8">{subdescription}</Description>
       )}
-      {linkProps && (
-        <Links
-          onClickReturn={onClickReturn}
-          href={linkProps.href}
-          label={linkProps.label}
-          target={linkProps.target}
-          type={linkProps.type}
-        />
-      )}
-      <div>{tabs}</div>
-      <div className="mt-8">{content}</div>
+      <div className="mb-6">{tabs}</div>
+      <div>{content}</div>
     </PageLayout>
   );
 };
