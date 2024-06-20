@@ -18,13 +18,7 @@ export default function Layout() {
     <div className="application">
       <Suspense>
         <ShellRoutingSync />
-        {isSuccess && (
-          <>
-            <HidePreloader />
-            <IndexPage />
-            <Outlet />
-          </>
-        )}
+        {isSuccess && <IndexPage />}
       </Suspense>
     </div>
   );

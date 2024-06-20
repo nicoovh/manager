@@ -1,49 +1,59 @@
 import {
-  Outlet,
+  redirect,
   Route,
   Routes,
+  useLocation,
   useNavigate,
   useParams,
 } from 'react-router-dom';
-import { ODS_SPINNER_SIZE } from '@ovhcloud/ods-components';
-import { OsdsSpinner } from '@ovhcloud/ods-components/react';
-import { useEffect } from 'react';
+import { lazy, useEffect } from 'react';
 import ListingPage from '@/pages/list/List.page';
 import OnBoardingPage from '@/pages/onboarding/OnBoarding.page';
 import { useAllVolumes } from '@/api/hooks/useVolume';
+import HidePreloader from '@/core/HidePreloader';
+
+const DeleteStorage = lazy(() => import('./delete/DeleteStorage.page'));
 
 export default function IndexPage() {
   const { projectId } = useParams();
-  const {
-    data: volumes,
-    isPending: isPendingVolume,
-    isLoading: isLoadingVolume,
-  } = useAllVolumes(projectId);
+  const { data, isPending } = useAllVolumes(projectId);
   const navigate = useNavigate();
-  const isLoading = isPendingVolume || isLoadingVolume;
-  console.log('coucou');
+  const location = useLocation();
   useEffect(() => {
-    if (!isLoading) {
-      console.log('demarrage useEffect');
-      if (volumes && volumes.length > 0) {
-        console.log('volumes existants');
-        navigate(``);
-        console.log('beubeu');
-      } else {
-        console.log('pas de volumes');
-        navigate(`./onboarding`);
-      }
+    // redirect to onboarding page
+    if (!isPending && !data?.length) {
+      navigate(`/pci/projects/${projectId}/storages/blocks/onboarding`);
     }
-  }, [navigate, isLoading, volumes]);
-  return isLoading ? (
-    <OsdsSpinner size={ODS_SPINNER_SIZE.md} inline={true} />
+    // redirect to listing page
+    if (!isPending && data?.length && /onboarding/.test(location.pathname)) {
+      navigate(`/pci/projects/${projectId}/storages/blocks`);
+    }
+  }, [isPending, location.pathname]);
+  return isPending ? (
+    <HidePreloader />
   ) : (
-    <>
-      <Routes>
-        <Route path={``} element={<ListingPage />} />
+    <Routes>
+      {data.length && (
+        <Route path={''} element={<ListingPage />}>
+          <Route
+            path="delete"
+            loader={() => {
+              console.log('LOADER');
+              return true;
+            }}
+            element={<h1>HELLO WORLD</h1>}
+          />
+          <Route
+            path="delete/:volumeId"
+            element={<DeleteStorage />}
+            handle={{ tracking: 'delete' }}
+          />
+        </Route>
+      )}
+      {!data?.length && (
         <Route path={'./onboarding'} element={<OnBoardingPage />} />
-      </Routes>
-      <Outlet />
-    </>
+      )}
+      <Route path="*" element={null} />
+    </Routes>
   );
 }

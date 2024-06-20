@@ -43,7 +43,6 @@ import { useVolumes } from '@/api/hooks/useVolume';
 import { useDatagridColumn } from '@/hooks/useDatagridColumn';
 
 export default function ListingPage() {
-  console.log('listing page');
   const { t } = useTranslation('common');
   const { t: tFilter } = useTranslation('filter');
   const [projectUrl, setProjectUrl] = useState('');

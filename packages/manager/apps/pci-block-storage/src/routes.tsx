@@ -35,35 +35,11 @@ export default [
     ...lazyRouteConfig(() => import('@/pages/Layout')),
     children: [
       {
-        path: '',
+        path: '*',
         handle: {
           tracking: 'blocks',
         },
         ...lazyRouteConfig(() => import('@/pages/Index.page')),
-        children: [
-          {
-            path: 'delete',
-            loader: ({ params, request }) => {
-              // this redirection is added to be iso with angularJS app URLs
-              const storageId = new URL(request.url).searchParams.get(
-                'storageId',
-              );
-              return redirect(
-                `/pci/projects/${params.projectId}/storages/blocks/delete/${storageId}`,
-              );
-            },
-          },
-          {
-            path: 'delete/:volumeId',
-            ...lazyRouteConfig(() =>
-              import('@/pages/delete/DeleteStorage.page'),
-            ),
-            handle: {
-              tracking: 'delete',
-            },
-            children: [],
-          },
-        ],
       },
     ],
   },
