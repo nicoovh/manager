@@ -20,6 +20,7 @@ import {
 } from './dedicatedCloud.constant';
 
 import { VM_ENCRYPTION_KMS } from './security/dedicatedCloud-security.constants';
+import VCDMigrationState from './vcdMigrationState.class';
 
 const moduleName = 'ovhManagerPccService';
 
@@ -1721,12 +1722,12 @@ class DedicatedCloudService {
       );
   }
 
-  hasSubscribedVCDOffer(serviceName) {
+  getManagedVCDMigrationState(serviceName) {
     return this.$http
       .get('/services', {
         params: { resourceName: `${serviceName}/option/tovcdmigration` },
       })
-      .then(({ data }) => data?.length > 0);
+      .then(({ data }) => new VCDMigrationState(data?.length));
   }
 }
 
