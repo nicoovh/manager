@@ -8,7 +8,6 @@ import ShellRoutingSync from '@/core/ShellRoutingSync';
 import HidePreloader from '@/core/HidePreloader';
 
 import usePageTracking from '@/hooks/usePageTracking';
-import IndexPage from '@/pages/Index.page';
 
 export default function Layout() {
   const { projectId } = useParams();
@@ -18,7 +17,12 @@ export default function Layout() {
     <div className="application">
       <Suspense>
         <ShellRoutingSync />
-        {isSuccess && <IndexPage />}
+        {isSuccess && (
+          <>
+            <HidePreloader />
+            <Outlet />
+          </>
+        )}
       </Suspense>
     </div>
   );

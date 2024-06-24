@@ -18,15 +18,10 @@ export interface RouteHandle {
 }
 
 export const ROUTE_PATHS = {
-  root: '/pci/projects/:projectId/storages/blocks',
-  onboarding: '/pci/projects/:projectId/storages/blocks/onboarding',
+  root: '/pci/projects/:projectId/storages/blocks/*',
 };
 
 export default [
-  {
-    path: '/',
-    ...lazyRouteConfig(() => import('@/pages/Layout')),
-  },
   {
     id: 'blocks',
     path: ROUTE_PATHS.root,
@@ -36,15 +31,9 @@ export default [
     children: [
       {
         path: '*',
-        handle: {
-          tracking: 'blocks',
-        },
         ...lazyRouteConfig(() => import('@/pages/Index.page')),
+        children: [],
       },
     ],
-  },
-  {
-    path: '*',
-    element: <>Not found page</>,
   },
 ];
