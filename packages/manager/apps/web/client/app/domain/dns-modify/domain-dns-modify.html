@@ -1,3 +1,54 @@
 <div>
-    <p>Voici la page de modification</p>
+    <div class="text-center" data-ng-if="$ctrl.loading.all">
+        <oui-spinner data-size="l"></oui-spinner>
+    </div>
+
+    <oui-back-button data-on-click="$ctrl.goBack()">
+        <span data-translate="domain_dns_modify"></span>
+    </oui-back-button>
+
+    <div class="oui-message oui-message_warning" role="alert">
+        <span
+            class="oui-message__icon oui-icon oui-icon-warning-circle"
+            aria-hidden="true"
+        ></span>
+        <p
+            class="oui-message__body"
+            data-translate="domain_dns_information_line1"
+        ></p>
+        <p
+            class="oui-message__body"
+            data-translate="domain_dns_information_line2"
+        ></p>
+    </div>
+    <div class="oui-message oui-message_info" role="alert">
+        <span
+            class="oui-message__icon oui-icon oui-icon-info-circle"
+            aria-hidden="true"
+        ></span>
+        <span
+            class="oui-message__body"
+            data-translate="{{ $ctrl.dns.originalNames.length > 0 ? 'domain_dns_currently_in_use': 'domain_dns_no_dns_in_use'}}"
+        ></span>
+        <span
+            data-ng-if="$ctrl.dns.originalNames.length > 0"
+            data-ng-bind="$ctrl.dns.originalNames.join(', ')"
+        ></span>
+    </div>
+
+    <br />
+
+    <oui-radio-group model="$ctrl.selectedConfiguration">
+        <div
+            data-ng-include="$ctrl.constants.COMPONENTS_PATH_PREFIX + 'internal-config-radio.html'"
+        ></div>
+        <hr />
+        <div
+            data-ng-include="$ctrl.constants.COMPONENTS_PATH_PREFIX + 'external-config-radio.html'"
+        ></div>
+        <hr />
+        <div
+            data-ng-include="$ctrl.constants.COMPONENTS_PATH_PREFIX + 'mixed-config-radio.html'"
+        ></div>
+    </oui-radio-group>
 </div>

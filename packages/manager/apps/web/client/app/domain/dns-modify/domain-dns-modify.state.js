@@ -4,6 +4,9 @@ const state = {
   url: '/dns-modify',
   views: {
     domainView: { component: componentName },
+    bindings: {
+      goBack: 'goBack',
+    },
   },
   resolve: {
     previousState: /* @ngInject */ ($transition$) => $transition$.$from(),

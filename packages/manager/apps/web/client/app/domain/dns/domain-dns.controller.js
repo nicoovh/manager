@@ -34,8 +34,8 @@ export default class DomainDnsCtrl {
 
   $onInit() {
     this.allowModification = false;
-    this.atLeastOneDns = true;
-    this.atLeastOneToRemove = true;
+    // this.atLeastOneDns = true;
+    // this.atLeastOneToRemove = true;
     this.dns = {
       original: null,
       nameServers: null,

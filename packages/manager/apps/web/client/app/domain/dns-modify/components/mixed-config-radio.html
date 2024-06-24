@@ -1,0 +1,34 @@
+<oui-radio
+    disabled="!$ctrl.isZone"
+    name="dns_configuration_types"
+    value="$ctrl.constants.CONFIGURATION_TYPES.MIXED"
+>
+    <oui-radio-label>
+        <span
+            data-translate="domain_dns_use_my_own_and_ovh_name_servers_title"
+        ></span>
+        <span
+            class="oui-badge oui-badge_warning oui-badge_s"
+            data-ng-bind="'domain_dns_advanced_label' | translate"
+        ></span>
+    </oui-radio-label>
+    <oui-radio-description>
+        <span
+            data-translate="domain_dns_use_my_own_and_ovh_name_servers_description"
+        ></span>
+        <div
+            class="oui-message oui-message_info mt-2"
+            role="alert"
+            data-ng-if="!$ctrl.isZone"
+        >
+            <span
+                class="oui-message__icon oui-icon oui-icon-info-circle"
+                aria-hidden="true"
+            ></span>
+            <span
+                class="oui-message__body"
+                data-translate="domain_dns_mixed_config_activate_zone_message"
+            ></span>
+        </div>
+    </oui-radio-description>
+</oui-radio>

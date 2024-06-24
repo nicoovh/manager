@@ -1,0 +1,164 @@
+<oui-radio
+    name="dns_configuration_types"
+    value="$ctrl.constants.CONFIGURATION_TYPES.EXTERNAL"
+>
+    <oui-radio-label
+        data-translate="domain_dns_use_my_own_name_servers_title"
+    ></oui-radio-label>
+    <oui-radio-description>
+        <span
+            data-translate="domain_dns_use_my_own_name_servers_description"
+        ></span>
+        <div
+            class="mt-2"
+            data-ng-show="$ctrl.selectedConfiguration === $ctrl.constants.CONFIGURATION_TYPES.EXTERNAL"
+            data-ng-form
+        >
+            <div class="oui-message oui-message_info mt-2" role="alert">
+                <span
+                    class="oui-message__icon oui-icon oui-icon-info-circle"
+                    aria-hidden="true"
+                ></span>
+                <span
+                    class="oui-message__body"
+                    data-translate="domain_dns_min_max_number_requirements"
+                    data-translate-values="{ minNumber: $ctrl.dns.registryConfiguration.minNumberOfDns, maxNumber: $ctrl.dns.registryConfiguration.maxNumberOfDns }"
+                ></span>
+            </div>
+
+            <form
+                class="oui-inline-adder__form"
+                novalidate
+                ng-attr-name="{{::$ctrl.currentDnsFormName}}_{{::$index}}"
+                ng-attr-id="{{::$ctrl.currentDnsFormId}}_{{::$index}}"
+                ng-class="'oui-inline-adder__form_added'"
+                ng-repeat="ns in $ctrl.modifiedDnsList"
+            >
+                <fieldset class="oui-inline-adder__fieldset">
+                    <div class="oui-inline-adder__row">
+                        <div class="oui-inline-adder__field">
+                            <oui-field
+                                label="{{'domain_dns_name' | translate}}"
+                            >
+                                <input
+                                    type="text"
+                                    class="oui-input"
+                                    name="{{$ctrl.constants.FORM_FIELD_NAMES.HOSTNAME}}"
+                                    ng-model="ns.nameServer"
+                                    value="{{ ns.nameServer }}"
+                                    ng-pattern="$ctrl.constants.VALIDATION_REGEX.HOSTNAME"
+                                    ng-disabled="$ctrl.isCurrentDnsDisabled"
+                                    required
+                                />
+                            </oui-field>
+                        </div>
+                        <div class="oui-inline-adder__field">
+                            <oui-field label="{{'domain_dns_ip' | translate}}">
+                                <input
+                                    type="text"
+                                    class="oui-input"
+                                    name="{{$ctrl.constants.FORM_FIELD_NAMES.IP}}"
+                                    ng-model="ns.ip"
+                                    value="{{ ns.ip }}"
+                                    ng-pattern="$ctrl.constants.VALIDATION_REGEX.IP"
+                                    ng-disabled="$ctrl.isCurrentDnsDisabled"
+                                />
+                            </oui-field>
+                        </div>
+                    </div>
+                </fieldset>
+                <footer class="oui-inline-adder__footer">
+                    <button
+                        type="button"
+                        class="oui-inline-adder__action oui-button oui-button_primary oui-button_s"
+                        ng-attr-title="{{'domain_dns_delete_tooltip' | translate}}"
+                        ng-attr-aria-label="{{::$ctrl.translations.ariaRemoveItem}}"
+                        ng-click="$ctrl.onFormRemove($index)"
+                    >
+                        <span class="oui-icon oui-icon-trash"></span>
+                    </button>
+                </footer>
+            </form>
+
+            <form
+                class="oui-inline-adder__form"
+                ng-attr-name="{{::$ctrl.newDnsFormName}}_{{::$index}}"
+                ng-attr-id="{{::$ctrl.newDnsFormId}}_{{::$index}}"
+                ng-repeat="form in $ctrl.forms track by $index"
+                ng-submit="$ctrl.onFormSubmit(this[$ctrl.newDnsFormName + '_'+ $index])"
+                data-ng-if="$ctrl.showAddForm"
+            >
+                <fieldset class="oui-inline-adder__fieldset">
+                    <div class="oui-inline-adder__row">
+                        <div class="oui-inline-adder__field">
+                            <oui-field
+                                label="{{'domain_dns_name' | translate}}"
+                            >
+                                <input
+                                    type="text"
+                                    class="oui-input"
+                                    name="{{$ctrl.constants.FORM_FIELD_NAMES.HOSTNAME}}"
+                                    ng-model="$ctrl.newDnsEntry.nameServer"
+                                    hostname-validator
+                                    required
+                                />
+                                <div
+                                    ng-messages="form[$ctrl.constants.FORM_FIELD_NAMES.HOSTNAME].$error"
+                                >
+                                    <span
+                                        ng-message="hostnamePattern"
+                                        data-translate="domain_dns_invalid_hostname_error"
+                                    ></span>
+                                    <span
+                                        ng-message="hostnameUnique"
+                                        data-translate="domain_dns_duplicated_hostname_error"
+                                    ></span>
+                                </div>
+                            </oui-field>
+                        </div>
+                        <div class="oui-inline-adder__field">
+                            <oui-field label="{{'domain_dns_ip' | translate}}">
+                                <input
+                                    type="text"
+                                    class="oui-input"
+                                    name="{{$ctrl.constants.FORM_FIELD_NAMES.IP}}"
+                                    ng-model="$ctrl.newDnsEntry.ip"
+                                    ng-pattern="$ctrl.constants.VALIDATION_REGEX.IP"
+                                />
+                            </oui-field>
+                        </div>
+                    </div>
+                </fieldset>
+                <footer class="oui-inline-adder__footer">
+                    <button
+                        type="submit"
+                        class="oui-inline-adder__action oui-button oui-button_primary oui-button_s"
+                        ng-attr-title="{{'domain_dns_add_tooltip' | translate}}"
+                        ng-attr-aria-label="{{::$ctrl.translations.ariaAddItem}}"
+                        ng-if="!$ctrl.isNewDnsDisabled"
+                    >
+                        <span class="oui-icon oui-icon-add"></span>
+                    </button>
+                </footer>
+            </form>
+
+            <div class="oui-button-group">
+                <button class="oui-button oui-button oui-button_primary">
+                    <span
+                        aria-hidden="true"
+                        data-translate="domain_dns_apply_configuration"
+                    ></span>
+                </button>
+                <button
+                    class="oui-button oui-button oui-button_secondary"
+                    ng-click="$ctrl.cancelModification()"
+                >
+                    <span
+                        aria-hidden="true"
+                        data-translate="domain_dns_cancel_modifications"
+                    ></span>
+                </button>
+            </div>
+        </div>
+    </oui-radio-description>
+</oui-radio>
