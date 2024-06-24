@@ -27,6 +27,7 @@ export type Node = {
   forceVisibility?: boolean;
   url?: string | Record<string, string>;
   isExternal?: boolean;
+  hidden?: boolean;
   routing?: NodeRouting;
   region?: string[];
   tag?: NodeTag;

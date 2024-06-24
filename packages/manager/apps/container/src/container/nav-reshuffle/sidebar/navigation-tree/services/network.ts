@@ -56,7 +56,6 @@ networkUniverse.children = [
     universe: networkUniverse,
     translation: 'sidebar_vrack_services',
     serviceType: 'VRACKSERVICES',
-    badge: 'beta',
     routing: {
       application: 'vrack-services',
       hash: '#/',

@@ -32,6 +32,17 @@ baremetalUniverse.children = [
         features: ['dedicated-server'],
       },
       {
+        id: 'dedicated-cluster',
+        universe: baremetalUniverse,
+        serviceType: 'DEDICATED_CLUSTER',
+        hidden: true,
+        routing: {
+          application: 'dedicated',
+          hash: '#/cluster',
+        },
+        features: ['dedicated-server'],
+      },
+      {
         id: 'dedicated-housing',
         universe: baremetalUniverse,
         translation: 'sidebar_dedicated_housing',

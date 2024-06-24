@@ -14,11 +14,15 @@ import { useShell } from '@/context';
 interface SubTreeSectionProps {
   node?: Node;
   selectedPciProject?: string;
+  selectedNode: Node;
+  handleOnSubmenuClick(node: Node): void;
 }
 
 const SubTreeSection: React.FC<ComponentProps<SubTreeSectionProps>> = ({
   node = {},
   selectedPciProject,
+  selectedNode,
+  handleOnSubmenuClick,
 }: SubTreeSectionProps): JSX.Element => {
   const { t } = useTranslation('sidebar');
   const shell = useShell();
@@ -39,20 +43,21 @@ const SubTreeSection: React.FC<ComponentProps<SubTreeSectionProps>> = ({
       name: trackingIdComplement.replace(/::$/g, ''),
       type: 'navigation',
     });
+    handleOnSubmenuClick(node);
   };
 
   return (
     <>
       {node.children ? (
         <ul className={`mt-3 pb-2 ${style.subtree_section}`}>
-          <li>
+          <li className="px-3">
             <h2 className={style.subtree_section_title}>
               {t(node.translation)}
             </h2>
           </li>
 
-          {node.children?.map((childNode) => (
-            <li key={childNode.id} id={childNode.id}>
+          {node.children?.filter(childNode => !childNode.hidden).map((childNode) => (
+            <li key={childNode.id} id={childNode.id} className={`px-3 ${childNode.id === selectedNode?.id ? style.sidebar_submenu_items_selected :  style.sidebar_submenu_items}`}>
               {!shouldHideElement(childNode, 1, 2) && (
                 <SidebarLink
                   linkParams={{
@@ -68,7 +73,8 @@ const SubTreeSection: React.FC<ComponentProps<SubTreeSectionProps>> = ({
           ))}
         </ul>
       ) : (
-        <SidebarLink
+        <div className="px-3">
+          <SidebarLink
           linkParams={{
             projectId: selectedPciProject,
           }}
@@ -76,6 +82,7 @@ const SubTreeSection: React.FC<ComponentProps<SubTreeSectionProps>> = ({
           handleNavigation={() => menuClickHandler(node)}
           id={node.idAttr}
         />
+        </div>
       )}
       {node.separator && <hr />}
     </>

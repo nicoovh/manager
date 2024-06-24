@@ -5,21 +5,26 @@
 .sidebar {
   @import '@ovh-ux/manager-hub/src/variables.scss';
   display: flex;
+  position: relative;
   flex-direction: row;
   width: fit-content;
-  min-height: 100%;
+  height: 100vh;
   background-color: $p-700;
   position: relative;
   color: white;
   
-  &Wrapper {
+  &_wrapper {
     display: flex;
-    height: fit-content;
+    height: 100%;
     width: 20rem;
     min-width: 20rem;
-    min-height: 100vh;
     flex-direction: column;
     justify-content: flex-end;
+    overflow-y: auto;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   &_short {
@@ -84,6 +89,22 @@
     background-color: $p-800;
   }
 
+  &_submenu_items:hover {
+    background-color: darken($p-800, 5);
+    
+    a, button  {
+      text-decoration: none;
+    }
+  }
+
+  &_submenu_items_selected {
+    background-color: darken($p-800, 5);
+
+    a:hover, button:hover  {
+      text-decoration: none !important;
+    }
+  }
+
   li {
     line-height: 2.3rem;
     vertical-align: middle;
@@ -98,10 +119,6 @@
       display: inline-block;
       width: 100%;
       outline: none;
-    }
-
-    a:hover {
-      text-decoration: underline !important;
     }
   }
 
@@ -171,10 +188,6 @@
     flex-grow: 1;
   }
 
-  &_selected {
-    background-color: $p-800;
-  }
-
   select {
     width: 100%;
     height: 2.5rem;
@@ -201,6 +214,7 @@
   }
 
   &_toggle_btn {
+    width: 100%;
     height: 2.5rem;
     background-color: $p-500;
     color: white;
@@ -229,9 +243,13 @@
   overflow-y: auto;
   &_content {
     background: $p-800;
-    height: auto;
-    min-height: 100%;
+    height: 100vh;
     width: 20rem;
+    overflow-y: auto;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
   &_list {
     min-height: 28.125rem;
@@ -262,8 +280,15 @@
     font-size: 1rem !important;
   }
   &_section{
-    border-bottom: solid 1px $p-200;
-    margin-top: 0.625em;
+    
+    &:after {
+      content: '';
+      margin-top: 0.625em;
+      display: flex;
+      width: auto;
+      border-bottom: solid 1px $p-200;
+      margin: 0 1rem;
+    }
   }
 }
 
@@ -276,16 +301,42 @@
     padding-top: 4em;
     width: 100%;
     min-width: unset;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    .sidebar::-webkit-scrollbar {
+      display: none;
+    }
+    
     &_logo {
       display: none;
     }
     &_toggle_btn {
       display: none;
     }
+    
+    &_wrapper {
+      width: 100%;
+      min-height: stretch;
+    }
+
+    &_selected {
+      .sidebar_wrapper {
+        transform: translatex(-100%);
+        transition-duration: 0.2s;
+      }
+
+      .subtree_content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        transition-duration: 0.2s;
+      }
+    }
   }
   .subtree {
-    left: 0;
-    width: 100%;
     &_content {
       padding-top: 2.75rem;
       width: 100%;
@@ -357,8 +408,13 @@
     font-size: 1rem !important;
   }
   &_section{
-    border-bottom: solid 1px $p-200;
-    margin-top: 0.625em;
+    &:after {
+      content: '';
+      margin: 0 1rem;
+      width: auto;
+      border-bottom: solid 1px $p-200;
+      margin-top: 0.625em;
+    }
   }
 }
 

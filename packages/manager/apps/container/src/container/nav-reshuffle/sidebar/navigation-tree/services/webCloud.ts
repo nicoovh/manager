@@ -108,7 +108,6 @@ webCloudUniverse.children = [
     {
       id: 'emails',
       universe: webCloudUniverse,
-      label: 'Emails',
       translation: 'sidebar_emails',
       features: ['email-pro', 'emails:mxplan'],
       children: [

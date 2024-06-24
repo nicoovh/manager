@@ -14,6 +14,7 @@ import SubTree from './SubTree';
 import style from './style.module.scss';
 import {
   initTree,
+  isMobile,
   countServices,
   findNodeById,
   findPathToNode,
@@ -23,10 +24,6 @@ import {
 } from './utils';
 import { Node, NodeRouting } from './navigation-tree/node';
 import useProductNavReshuffle from '@/core/product-nav-reshuffle';
-import { Environment } from '@ovh-ux/manager-config';
-import { Shell } from '@ovh-ux/shell';
-import root from './navigation-tree/root';
-
 interface ServicesCountError {
   url: string;
   status: number;
@@ -52,7 +49,6 @@ const Sidebar = (): JSX.Element => {
     currentNavigationNode,
     setCurrentNavigationNode,
     setNavigationTree,
-    isNavigationSidebarOpened,
   } = useProductNavReshuffle();
   const [servicesCount, setServicesCount] = useState<ServicesCount>(null);
   const [menuItems, setMenuItems] = useState<
@@ -60,8 +56,10 @@ const Sidebar = (): JSX.Element => {
   >([]);
   const [selectedNode, setSelectedNode] = useState<Node>(null);
   const [displayedNode, setDisplayedNode] = useState<Node>(null);
+  const [selectedSubmenu, setSelectedSubmenu]= useState<Node>(null);
   const [open, setOpen] = useState<boolean>(true);
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>(null);
+  const mobile = isMobile();
   const logoLink = navigationPlugin.getURL('hub', '#/');
 
   const toggleSidebar = () => {
@@ -121,47 +119,6 @@ const Sidebar = (): JSX.Element => {
           mxPlanNode.routing.hash = '#/email_mxplan';
         }
 
-        /**
-         * Remove Identity Documents option
-         * Identity docments entry is added by default in ./navigation-tree/root.ts
-         */
-        let isIdentityDocumentsVisible;
-        if (results['identity-documents']) {
-          const { status } = await reketInstance.get(`/me/procedure/identity`);
-          if (!['required', 'open'].includes(status)) {
-            isIdentityDocumentsVisible = false;
-          }
-        } else {
-          isIdentityDocumentsVisible = false;
-        }
-        const account = findNodeById(tree, 'account');
-        if (!isIdentityDocumentsVisible && account) {
-          account.children.splice(
-            account.children.findIndex(
-              (node) => node.id === 'account_identity_documents',
-            ),
-            1,
-          );
-        }
-
-        /**
-         * US enterprise customers special case
-         */
-        ['billing_bills', 'billing_payment', 'orders'].forEach((nodeId) => {
-          const node = findNodeById(tree, nodeId);
-          if (!node) return;
-          const env = environmentPlugin.getEnvironment();
-          if (env.getRegion() === 'US' && env.user.enterprise) {
-            if (nodeId === 'orders') {
-              node.hideIfEmpty = true;
-            } else {
-              delete node.routing;
-              node.url = 'https://billing.us.ovhcloud.com/login';
-              node.isExternal = true;
-            }
-          }
-        });
-
         setNavigationTree(tree);
         setCurrentNavigationNode(tree);
       }
@@ -183,8 +140,6 @@ const Sidebar = (): JSX.Element => {
       })
       .then((result: ServicesCount) => setServicesCount(result));
   }, []);
-
-
 
   const findUniverse = (node: Node, locationPath: string) => {
     const isMatchingNode = (node: Node, pathSegment: string) => {
@@ -209,6 +164,7 @@ const Sidebar = (): JSX.Element => {
       const path = pathSegments.slice(0, i).join("/");
       const result = exploreTree(node, path);
       if (result) {
+        if (!selectedSubmenu) setSelectedSubmenu(result);
         return result.universe;
       }
     }
@@ -220,7 +176,7 @@ const Sidebar = (): JSX.Element => {
     const node = findUniverse(navigationRoot, pathname);
     setSelectedNode(node);
     setDisplayedNode(node);
-    setOpen(false);
+    if (!mobile && node) setOpen(false);
   }, [location]);
 
   /**
@@ -242,8 +198,8 @@ const Sidebar = (): JSX.Element => {
   }, [currentNavigationNode, servicesCount]);
 
   return (
-    <div className={`${style.sidebar}`}>
-      <div className={`${style.sidebarWrapper} ${!open && style.sidebar_short}`}>
+    <div className={`${style.sidebar} ${displayedNode ? style.sidebar_selected : ''}`}>
+      <div className={`${style.sidebar_wrapper} ${!open && style.sidebar_short}`}>
         <a
           role="img"
           className={`block ${style.sidebar_logo}`}
@@ -336,9 +292,13 @@ const Sidebar = (): JSX.Element => {
       {displayedNode !== null && (
         <SubTree
           handleBackNavigation={() => {
-            setDisplayedNode(selectedNode);
+            mobile ? setDisplayedNode(null) : setDisplayedNode(selectedNode);
           }}
           handleOnMouseOver={(node) => setDisplayedNode(node)}
+          selectedNode={selectedSubmenu}
+          handleOnSubmenuClick={(node) => {
+            setSelectedSubmenu(node)
+          }}
           rootNode={displayedNode}
         ></SubTree>
       )}
