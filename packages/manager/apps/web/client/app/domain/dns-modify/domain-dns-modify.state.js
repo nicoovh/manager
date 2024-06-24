@@ -4,9 +4,6 @@ const state = {
   url: '/dns-modify',
   views: {
     domainView: { component: componentName },
-    bindings: {
-      goBack: 'goBack',
-    },
   },
   resolve: {
     previousState: /* @ngInject */ ($transition$) => $transition$.$from(),
@@ -15,6 +12,8 @@ const state = {
         previousState.name ? previousState.name : 'app.domain.product.dns',
       );
     },
+    goToDnsModifyConfirm: /* @ngInject */ ($state) => () =>
+      $state.go('app.domain.product.dns_modify.confirm'),
     breadcrumb: /* @ngInject */ ($translate) =>
       $translate.instant('domain_dns_modify'),
   },

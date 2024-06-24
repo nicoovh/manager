@@ -48,8 +48,6 @@ export default class DomainDnsModifyCtrl {
       zoneCheck: this.constants.urls.TOOLS.ZONE_CHECK,
     };
 
-    this.goBack = this.goBack || (() => {});
-
     this.$scope.$on('Domain.Dns.Reload', () => this.init());
     this.$scope.getCurrentDns = () => this.getCurrentDns();
 

@@ -30,5 +30,19 @@
                 data-translate="domain_dns_default_config_activate_zone_message"
             ></span>
         </div>
+        <div
+            class="mt-2"
+            ng-if="$ctrl.selectedConfiguration === $ctrl.constants.CONFIGURATION_TYPES.INTERNAL"
+        >
+            <button
+                class="oui-button oui-button oui-button_primary"
+                data-ng-click="$ctrl.goToDnsModifyConfirm()"
+            >
+                <span
+                    aria-hidden="true"
+                    data-translate="domain_dns_apply_configuration"
+                ></span>
+            </button>
+        </div>
     </oui-radio-description>
 </oui-radio>
