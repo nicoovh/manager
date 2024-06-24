@@ -4,6 +4,7 @@ import {
   FilterList,
   isDiscoveryProject,
   Notifications,
+  PciAnnouncementBanner,
   PciDiscoveryBanner,
   PciGuidesHeader,
   useColumnFilters,
@@ -41,6 +42,7 @@ import {
 import { FilterCategories, FilterComparator } from '@ovh-ux/manager-core-api';
 import { useVolumes } from '@/api/hooks/useVolume';
 import { useDatagridColumn } from '@/hooks/useDatagridColumn';
+import { useAnnouncementBanner } from '@/hooks/useAnnouncementBanner';
 
 export default function ListingPage() {
   const { t } = useTranslation('common');
@@ -49,6 +51,7 @@ export default function ListingPage() {
 
   const { navigation } = useContext(ShellContext).shell;
   const { projectId } = useParams();
+  const { isBannerVisible } = useAnnouncementBanner();
   const columns = useDatagridColumn(projectId, projectUrl);
   const [searchField, setSearchField] = useState('');
   const { data: project } = useProject(projectId || '');
@@ -108,6 +111,7 @@ export default function ListingPage() {
       </div>
 
       <OsdsDivider></OsdsDivider>
+      {isBannerVisible && <PciAnnouncementBanner />}
       <Notifications />
       <div className="mb-5">
         {isDiscoveryProject(project) && (
