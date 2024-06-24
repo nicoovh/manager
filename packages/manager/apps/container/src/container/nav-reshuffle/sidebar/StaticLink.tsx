@@ -57,6 +57,7 @@ const StaticLink: React.FC<ComponentProps<StaticLinkProps>> = ({
       target={node.isExternal ? '_blank' : '_top'}
       rel={node.isExternal ? 'noopener noreferrer' : ''}
       id={id}
+      className='d-flex items-center'
     >
       {t(isShortText ? node.shortTranslation : node.translation)}
       {node.isExternal && (
@@ -70,7 +71,7 @@ const StaticLink: React.FC<ComponentProps<StaticLinkProps>> = ({
           <OsdsIcon
             name={ODS_ICON_NAME.SHAPE_DOT}
             size={ODS_ICON_SIZE.xs}
-            className={`ml-1 ${style.sidebarLinkTag}`}
+            className={`ml-auto ${style.sidebarLinkTag}`}
           />
       )}
     </a>
