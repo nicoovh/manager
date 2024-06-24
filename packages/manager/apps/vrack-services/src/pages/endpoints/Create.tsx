@@ -3,12 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { OsdsSelect, OsdsSelectOption } from '@ovhcloud/ods-components/react';
-import {
-  ODS_SELECT_SIZE,
-  OdsSelectValueChangeEvent,
-} from '@ovhcloud/ods-components';
-import { ApiError, ApiResponse } from '@ovh-ux/manager-core-api';
+import { ODS_SELECT_SIZE } from '@ovhcloud/ods-components';
 import { PageType, useOvhTracking } from '@ovh-ux/manager-react-shell-client';
+import { ApiError, ApiResponse } from '@ovh-ux/manager-core-api';
 import {
   VrackServices,
   getVrackServicesResourceListQueryKey,
@@ -143,9 +140,7 @@ export default function EndpointCreationPage() {
           disabled={isPending || isServiceListLoading || undefined}
           id={serviceTypeSelectName}
           value={serviceType}
-          onOdsValueChange={(e: OdsSelectValueChangeEvent) =>
-            setServiceType(e?.detail.value as string)
-          }
+          onOdsValueChange={(e) => setServiceType(e?.detail.value as string)}
           size={ODS_SELECT_SIZE.md}
         >
           <span slot="placeholder">{t('serviceTypePlaceholder')}</span>
@@ -174,7 +169,7 @@ export default function EndpointCreationPage() {
             undefined
           }
           id={serviceNameSelectName}
-          onOdsValueChange={(e: OdsSelectValueChangeEvent) =>
+          onOdsValueChange={(e) =>
             setManagedServiceURN(e?.detail.value as string)
           }
           size={ODS_SELECT_SIZE.md}
@@ -202,9 +197,7 @@ export default function EndpointCreationPage() {
           inline
           disabled={isPending || undefined}
           id={subnetSelectName}
-          onOdsValueChange={(e: OdsSelectValueChangeEvent) =>
-            setCidr(e?.detail.value as string)
-          }
+          onOdsValueChange={(e) => setCidr(e?.detail.value as string)}
           size={ODS_SELECT_SIZE.md}
         >
           <span slot="placeholder">{t('subnetPlaceholder')}</span>

@@ -9,7 +9,6 @@ import {
   ODS_SPINNER_SIZE,
   ODS_TEXT_LEVEL,
   ODS_TEXT_SIZE,
-  OdsSelectValueChangeEvent,
 } from '@ovhcloud/ods-components';
 import {
   OsdsText,
@@ -94,7 +93,7 @@ export const AssociateVrack: React.FC<AssociateVrackProps> = ({
       <OsdsSelect
         size={ODS_SELECT_SIZE.md}
         disabled={isPending || undefined}
-        onOdsValueChange={(event: OdsSelectValueChangeEvent) =>
+        onOdsValueChange={(event) =>
           setSelectedVrack(event.detail.value as string)
         }
       >
