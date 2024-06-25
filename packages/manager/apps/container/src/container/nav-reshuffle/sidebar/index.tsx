@@ -20,7 +20,7 @@ import {
   initFeatureNames,
   shouldHideElement,
   findUniverse,
-  splitPathIntoSegmentsRouteParams,
+  splitPathIntoSegmentsWithoutRouteParams,
 } from './utils';
 import { Node } from './navigation-tree/node';
 import useProductNavReshuffle from '@/core/product-nav-reshuffle';
@@ -166,7 +166,7 @@ const Sidebar = (): JSX.Element => {
           ? node.routing.hash.replace('#', node.routing.application)
           : '/' + node.routing.application;
         
-        const parsedPath = splitPathIntoSegmentsRouteParams(nodePath);
+        const parsedPath = splitPathIntoSegmentsWithoutRouteParams(nodePath);
         const isMatching = parsedPath.reduce((acc: boolean, segment: string) => acc && pathname.includes(segment), true);
         if (isMatching) {
           selectSubmenu(node, parent);

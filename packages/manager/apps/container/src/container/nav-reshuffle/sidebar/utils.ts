@@ -213,7 +213,7 @@ export const isMobile = () => {
 /* this function is used to parse a path with the pattern /some/thing/{id}/other/thing
 and return it as an array of segments: ['/some/thing/', '/other/thing']
 if no curly brackets, that returns an array that contains only the path */
-export const splitPathIntoSegmentsRouteParams = (
+export const splitPathIntoSegmentsWithoutRouteParams = (
   path: string,
 ): string[] => {
   const regex = /\/(?!{)[^\/]+(\/(?!{)[^\/]+)?/g;
@@ -228,7 +228,7 @@ export const findUniverse = (root: Node, locationPath: string) => {
       ? node.routing.hash.replace('#', node.routing.application)
       : '/' + node.routing.application;
 
-    const parsedPath = splitPathIntoSegmentsRouteParams(nodePath);
+    const parsedPath = splitPathIntoSegmentsWithoutRouteParams(nodePath);
     return parsedPath.reduce(
       (acc: boolean, segment: string) => pathSegment.includes(segment) && acc,
       true,
