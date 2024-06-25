@@ -40,28 +40,25 @@
                             <oui-field
                                 label="{{'domain_dns_name' | translate}}"
                             >
+                                <!-- Here, the input is used for display only, and should always be disabled -->
                                 <input
                                     type="text"
                                     class="oui-input"
-                                    name="{{$ctrl.constants.FORM_FIELD_NAMES.HOSTNAME}}"
                                     ng-model="ns.nameServer"
                                     value="{{ ns.nameServer }}"
-                                    ng-pattern="$ctrl.constants.VALIDATION_REGEX.HOSTNAME"
-                                    ng-disabled="$ctrl.isCurrentDnsDisabled"
-                                    required
+                                    ng-disabled="true"
                                 />
                             </oui-field>
                         </div>
                         <div class="oui-inline-adder__field">
                             <oui-field label="{{'domain_dns_ip' | translate}}">
+                                <!-- Here, the input is used for display only, and should always be disabled -->
                                 <input
                                     type="text"
                                     class="oui-input"
-                                    name="{{$ctrl.constants.FORM_FIELD_NAMES.IP}}"
                                     ng-model="ns.ip"
                                     value="{{ ns.ip }}"
-                                    ng-pattern="$ctrl.constants.VALIDATION_REGEX.IP"
-                                    ng-disabled="$ctrl.isCurrentDnsDisabled"
+                                    ng-disabled="true"
                                 />
                             </oui-field>
                         </div>
@@ -81,70 +78,10 @@
             </form>
 
             <dns-form
-                on-submit="$ctrl.onFormSubmit"
+                on-submit="$ctrl.onSubmit(dnsEntry)"
                 modified-dns-list="$ctrl.modifiedDnsList"
+                ng-if="$ctrl.showAddForm"
             />
-
-            <!-- <form
-                class="oui-inline-adder__form"
-                ng-submit="$ctrl.onFormSubmit()"
-                data-ng-if="$ctrl.showAddForm"
-                ng-controller="$ctrl"
-                name="newDnsEntryForm"
-            >
-                <fieldset class="oui-inline-adder__fieldset">
-                    <div class="oui-inline-adder__row">
-                        <div class="oui-inline-adder__field">
-                            <oui-field
-                                label="{{'domain_dns_name' | translate}}"
-                            >
-                                <input
-                                    type="text"
-                                    class="oui-input"
-                                    name="{{$ctrl.constants.FORM_FIELD_NAMES.HOSTNAME}}"
-                                    ng-model="$ctrl.newDnsEntry.nameServer"
-                                    hostname-validator
-                                    required
-                                />
-                                <div
-                                    ng-messages="form[$ctrl.constants.FORM_FIELD_NAMES.HOSTNAME].$error"
-                                >
-                                    <span
-                                        ng-message="hostnamePattern"
-                                        data-translate="domain_dns_invalid_hostname_error"
-                                    ></span>
-                                    <span
-                                        ng-message="hostnameUnique"
-                                        data-translate="domain_dns_duplicated_hostname_error"
-                                    ></span>
-                                </div>
-                            </oui-field>
-                        </div>
-                        <div class="oui-inline-adder__field">
-                            <oui-field label="{{'domain_dns_ip' | translate}}">
-                                <input
-                                    type="text"
-                                    class="oui-input"
-                                    name="{{$ctrl.constants.FORM_FIELD_NAMES.IP}}"
-                                    ng-model="$ctrl.newDnsEntry.ip"
-                                    ng-pattern="$ctrl.constants.VALIDATION_REGEX.IP"
-                                />
-                            </oui-field>
-                        </div>
-                    </div>
-                </fieldset>
-                <footer class="oui-inline-adder__footer">
-                    <button
-                        type="submit"
-                        class="oui-inline-adder__action oui-button oui-button_primary oui-button_s"
-                        ng-attr-title="{{'domain_dns_add_tooltip' | translate}}"
-                        ng-attr-aria-label="{{::$ctrl.translations.ariaAddItem}}"
-                        ng-if="!$ctrl.isNewDnsDisabled"
-                    >
-                        <span class="oui-icon oui-icon-add"></span>
-                    </button>
-                </footer>
-            </form> -->
 
             <div class="oui-button-group">
                 <button class="oui-button oui-button oui-button_primary">

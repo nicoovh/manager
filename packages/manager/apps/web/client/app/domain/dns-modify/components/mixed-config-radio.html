@@ -2,6 +2,8 @@
     disabled="!$ctrl.isZone"
     name="dns_configuration_types"
     value="$ctrl.constants.CONFIGURATION_TYPES.MIXED"
+    model="$ctrl.selectedConfiguration"
+    on-change="$ctrl.onChange($ctrl.selectedConfiguration)"
 >
     <oui-radio-label>
         <span

@@ -35,7 +35,7 @@ export default class DomainDnsModifyCtrl {
   $onInit() {
     this.allowModification = false;
     this.dns = {
-      original: null,
+      original: [],
       originalNames: [],
       registryConfiguration: null,
     };
@@ -121,28 +121,11 @@ export default class DomainDnsModifyCtrl {
   }
 
   initFormControls() {
-    this.initModel();
-
     this.modifiedDnsList = [];
-
-    this.$scope.$broadcast('modifyDnsList', this.modifiedDnsList);
     this.showAddForm = true;
-    this.forms = [true];
-    this.isCurrentDnsDisabled = true;
-    this.isNewDnsDisabled = false;
-    this.isDuplicatedError = true;
 
-    this.newDnsFormId = 'newDnsFormId';
-    this.newDnsFormName = 'newDnsFormName';
     this.currentDnsFormId = 'currentDnsFormId';
     this.currentDnsFormName = 'currentDnsFormName';
-  }
-
-  initModel() {
-    this.newDnsEntry = {
-      nameServer: '',
-      ip: '',
-    };
   }
 
   getCurrentDns(resource) {
@@ -183,7 +166,6 @@ export default class DomainDnsModifyCtrl {
       // Keep only the host names to remind the customer which ones are in use
       this.dns.originalNames.push(ns.nameServer);
       // Keep the original values to be able to reset the form
-      this.dns.original = [];
       this.dns.original.push(nameServer);
       // Pre-fill the form with existing values
       this.modifiedDnsList.push(nameServer);
@@ -241,15 +223,16 @@ export default class DomainDnsModifyCtrl {
   }
 
   onChange(value) {
-    if (value === this.constants.CONFIGURATION_TYPES.INTERNAL) {
-      console.log(this.zone.nameServers);
-      this.modifiedDnsList = [];
+    if (
+      value === this.constants.CONFIGURATION_TYPES.INTERNAL ||
+      value === this.constants.CONFIGURATION_TYPES.MIXED
+    ) {
+      this.modifiedDnsList = []; // re-initialize the modified DNS list
       this.zone.nameServers.forEach((ns) => {
         this.modifiedDnsList.push({
           nameServer: ns,
         });
       });
-      console.log(this.modifiedDnsList);
     }
   }
 
@@ -299,21 +282,11 @@ export default class DomainDnsModifyCtrl {
     this.showAddForm =
       this.modifiedDnsList.length <
       this.dns.registryConfiguration.maxNumberOfDns;
-    this.initModel();
   }
 
-  onFormSubmit() {
-    const form = this.$scope.newDnsEntryForm;
-    console.log(form);
-
-    if (form.$valid) {
-      this.modifiedDnsList.push({
-        nameServer: form.hostnameField.$modelValue,
-        ip: form.ipField?.$modelValue,
-      });
-
-      this.onFormsChange();
-    }
+  onSubmit(dnsEntry) {
+    this.modifiedDnsList.push(dnsEntry);
+    this.onFormsChange();
   }
 
   cancelModification() {

@@ -1,20 +1,22 @@
 import template from './dns-form.html';
 
 function DnsFormController() {
-  const ctrl = this;
-
-  ctrl.dnsEntry = {
-    nameServer: '',
-    ip: '',
+  const initModel = () => {
+    this.dnsEntry = {
+      nameServer: '',
+      ip: '',
+    };
   };
 
-  ctrl.$onInit = () => {
-    ctrl.dnsEntry.nameServer = ctrl.nameServer || '';
-    ctrl.dnsEntry.ip = ctrl.ip || '';
+  this.$onInit = () => {
+    initModel();
+    this.dnsEntry.nameServer = this.nameServer || '';
+    this.dnsEntry.ip = this.ip || '';
   };
 
-  ctrl.onFormSubmit = () => {
-    ctrl.onSubmit({ dnsEntry: ctrl.dnsEntry });
+  this.onFormSubmit = () => {
+    this.onSubmit({ dnsEntry: this.dnsEntry });
+    initModel();
   };
 }
 

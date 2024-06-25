@@ -1,6 +1,6 @@
 <form
     class="oui-inline-adder__form"
-    ng-submit="dnsForm.$valid && $ctrl.onFormSubmit"
+    ng-submit="dnsForm.$valid && $ctrl.onFormSubmit()"
     name="dnsForm"
 >
     <fieldset class="oui-inline-adder__fieldset">
@@ -12,10 +12,9 @@
                         class="oui-input"
                         name="nameServerField"
                         ng-model="$ctrl.dnsEntry.nameServer"
-                        hostname-validator
                         required
                     />
-                    <div
+                    <!-- <div
                         ng-messages="form[$ctrl.constants.FORM_FIELD_NAMES.HOSTNAME].$error"
                     >
                         <span
@@ -26,11 +25,10 @@
                             ng-message="hostnameUnique"
                             data-translate="domain_dns_duplicated_hostname_error"
                         ></span>
-                    </div>
+                    </div> -->
                 </oui-field>
             </div>
             <div class="oui-inline-adder__field">
-                <!-- TODO: use constants for field names? -->
                 <oui-field label="{{'domain_dns_ip' | translate}}">
                     <input
                         type="text"
@@ -48,8 +46,6 @@
             type="submit"
             class="oui-inline-adder__action oui-button oui-button_primary oui-button_s"
             ng-attr-title="{{'domain_dns_add_tooltip' | translate}}"
-            ng-attr-aria-label="{{::$ctrl.translations.ariaAddItem}}"
-            ng-if="!$ctrl.isNewDnsDisabled"
         >
             <span class="oui-icon oui-icon-add"></span>
         </button>
