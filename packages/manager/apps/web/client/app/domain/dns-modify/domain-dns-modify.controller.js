@@ -19,12 +19,14 @@ export default class DomainDnsModifyCtrl {
     Domain,
     WucUser,
     constants,
+    Alerter,
   ) {
     this.$scope = $scope;
     this.$filter = $filter;
     this.$q = $q;
     this.$stateParams = $stateParams;
     this.$translate = $translate;
+    this.Alerter = Alerter;
     this.Domain = Domain;
     this.WucUser = WucUser;
     this.constants = constants;
@@ -33,7 +35,7 @@ export default class DomainDnsModifyCtrl {
   $onInit() {
     this.allowModification = false;
     this.dns = {
-      original: [],
+      original: null,
       originalNames: [],
       registryConfiguration: null,
     };
@@ -85,11 +87,21 @@ export default class DomainDnsModifyCtrl {
     return this.Domain.getSelected(this.$stateParams.productId)
       .then((domain) => {
         this.domain = domain;
-        this.Domain.getResource(this.$stateParams.productId).then((data) => {
-          this.getCurrentDns(data);
-          this.getDnsRegistryConfiguration(data);
-          this.resource = data;
-        });
+        this.Domain.getResource(this.$stateParams.productId)
+          .then((data) => {
+            this.getCurrentDns(data);
+            this.getDnsRegistryConfiguration(data);
+            this.resource = data;
+          })
+          .catch((error) => {
+            this.$translate('domain_dns_error_initializing', {
+              message: error.data?.message || error.message || 'Unknown error',
+            }).then((translation) => {
+              console.log(translation);
+              this.Alerter.error(translation, this.$scope.alerts.main);
+              console.log(this.$scope.alerts.main);
+            });
+          });
         this.Domain.getZoneByZoneName(this.$stateParams.productId).then(
           (zone) => {
             if (zone) {
@@ -165,6 +177,7 @@ export default class DomainDnsModifyCtrl {
       // Keep only the host names to remind the customer which ones are in use
       this.dns.originalNames.push(ns.nameServer);
       // Keep the original values to be able to reset the form
+      this.dns.original = [];
       this.dns.original.push(nameServer);
       // Pre-fill the form with existing values
       this.modifiedDnsList.push(nameServer);
@@ -270,14 +283,9 @@ export default class DomainDnsModifyCtrl {
     this.initModel();
   }
 
-  onFormSubmit(form) {
-    const isDuplicated = this.modifiedDnsList.some(
-      (ns) => ns.nameServer === form.hostnameField.$modelValue,
-    );
-
-    if (isDuplicated) {
-      this.isDuplicatedError = true;
-    }
+  onFormSubmit() {
+    const form = this.$scope.newDnsEntryForm;
+    console.log(form);
 
     if (form.$valid) {
       this.modifiedDnsList.push({

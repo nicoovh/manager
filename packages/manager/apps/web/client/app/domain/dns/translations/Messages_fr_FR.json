@@ -1,4 +1,5 @@
 {
   "domain_dns": "Serveurs DNS",
-  "domain_dns_modify": "Modifier mes serveurs DNS"
+  "domain_dns_modify": "Modifier mes serveurs DNS",
+  "domain_dns_error_initializing": "Une erreur est survenue lors de la récupération des données DNS: {{message}}"
 }

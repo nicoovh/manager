@@ -34,8 +34,6 @@ export default class DomainDnsCtrl {
 
   $onInit() {
     this.allowModification = false;
-    // this.atLeastOneDns = true;
-    // this.atLeastOneToRemove = true;
     this.dns = {
       original: null,
       nameServers: null,
@@ -88,10 +86,10 @@ export default class DomainDnsCtrl {
 
   getDns() {
     this.loading.nameServers = true;
-    this.dns.nameServers = [];
 
     return this.Domain.getResource(this.$stateParams.productId)
       .then((data) => {
+        this.dns.nameServers = [];
         const resource = data;
 
         // TODO: to delete when schemas are prodded
@@ -218,6 +216,13 @@ export default class DomainDnsCtrl {
           if (ns.status !== DNS_STATUS.ACTIVATED) {
             this.dns.isUpdatingNameServers = true;
           }
+        });
+      })
+      .catch((error) => {
+        this.$translate('domain_dns_error_initializing', {
+          message: error.data?.message || error.message || 'Unknown error',
+        }).then((translation) => {
+          this.Alerter.error(translation, this.$scope.alerts.main);
         });
       })
       .finally(() => {

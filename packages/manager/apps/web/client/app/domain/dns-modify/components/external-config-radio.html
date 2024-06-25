@@ -80,13 +80,17 @@
                 </footer>
             </form>
 
-            <form
+            <dns-form
+                on-submit="$ctrl.onFormSubmit"
+                modified-dns-list="$ctrl.modifiedDnsList"
+            />
+
+            <!-- <form
                 class="oui-inline-adder__form"
-                ng-attr-name="{{::$ctrl.newDnsFormName}}_{{::$index}}"
-                ng-attr-id="{{::$ctrl.newDnsFormId}}_{{::$index}}"
-                ng-repeat="form in $ctrl.forms track by $index"
-                ng-submit="$ctrl.onFormSubmit(this[$ctrl.newDnsFormName + '_'+ $index])"
+                ng-submit="$ctrl.onFormSubmit()"
                 data-ng-if="$ctrl.showAddForm"
+                ng-controller="$ctrl"
+                name="newDnsEntryForm"
             >
                 <fieldset class="oui-inline-adder__fieldset">
                     <div class="oui-inline-adder__row">
@@ -140,7 +144,7 @@
                         <span class="oui-icon oui-icon-add"></span>
                     </button>
                 </footer>
-            </form>
+            </form> -->
 
             <div class="oui-button-group">
                 <button class="oui-button oui-button oui-button_primary">
