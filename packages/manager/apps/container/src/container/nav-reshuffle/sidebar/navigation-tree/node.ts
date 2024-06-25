@@ -12,7 +12,7 @@ export enum NodeTag {
 export type Node = {
   children?: Node[];
   parent?: Node;
-  universe?: Node;
+  universe?: string;
   count?: number | boolean;
   id?: string;
   path?: string;
@@ -24,6 +24,7 @@ export type Node = {
   separator?: boolean;
   idAttr?: string;
   hideIfEmpty?: boolean;
+  badge?: string;
   forceVisibility?: boolean;
   url?: string | Record<string, string>;
   isExternal?: boolean;

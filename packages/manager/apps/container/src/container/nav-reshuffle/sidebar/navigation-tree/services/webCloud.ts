@@ -16,14 +16,14 @@ const webCloudUniverse : Node = {
 webCloudUniverse.children = [
     {
       id: 'domain-dns',
-      universe: webCloudUniverse,
+      universe: webCloudUniverse.id,
       translation: 'sidebar_domain_dns',
       features: ['web:domains', 'web:domains:zone'],
       count: false,
       children: [
         {
           id: 'domains-operations',
-          universe: webCloudUniverse,
+          universe: webCloudUniverse.id,
           translation: 'sidebar_domain_operations',
           routing: {
             application: 'web',
@@ -34,7 +34,7 @@ webCloudUniverse.children = [
         },
         {
           id: 'domains',
-          universe: webCloudUniverse,
+          universe: webCloudUniverse.id,
           translation: 'sidebar_domain',
           serviceType: 'DOMAIN',
           routing: {
@@ -45,7 +45,7 @@ webCloudUniverse.children = [
         },
         {
           id: 'dns',
-          universe: webCloudUniverse,
+          universe: webCloudUniverse.id,
           translation: 'sidebar_dns',
           serviceType: 'DOMAIN_ZONE',
           routing: {
@@ -58,13 +58,13 @@ webCloudUniverse.children = [
     },
     {
       id: 'web-hosting',
-      universe: webCloudUniverse,
+      universe: webCloudUniverse.id,
       translation: 'sidebar_web_hosting',
       features: ['hosting', 'private-database'],
       children: [
         {
           id: 'hosting',
-          universe: webCloudUniverse,
+          universe: webCloudUniverse.id,
           translation: 'sidebar_hosting',
           serviceType: 'HOSTING_WEB',
           routing: {
@@ -75,7 +75,7 @@ webCloudUniverse.children = [
         },
         {
           id: 'web-databases',
-          universe: webCloudUniverse,
+          universe: webCloudUniverse.id,
           translation: 'sidebar_web_db',
           serviceType: 'HOSTING_PRIVATEDATABASE',
           routing: {
@@ -88,12 +88,12 @@ webCloudUniverse.children = [
     },
     {
       id: 'web-paas',
-      universe: webCloudUniverse,
+      universe: webCloudUniverse.id,
       translation: 'sidebar_web_paas',
       children: [
         {
           id: 'platform-sh',
-          universe: webCloudUniverse,
+          universe: webCloudUniverse.id,
           translation: 'sidebar_platform_sh',
           serviceType: 'WEBPAAS_SUBSCRIPTION',
           routing: {
@@ -107,13 +107,13 @@ webCloudUniverse.children = [
     },
     {
       id: 'emails',
-      universe: webCloudUniverse,
+      universe: webCloudUniverse.id,
       translation: 'sidebar_emails',
       features: ['email-pro', 'emails:mxplan'],
       children: [
         {
           id: 'email-pro',
-          universe: webCloudUniverse,
+          universe: webCloudUniverse.id,
           translation: 'sidebar_email_pro',
           serviceType: 'EMAIL_PRO',
           routing: {
@@ -124,7 +124,7 @@ webCloudUniverse.children = [
         },
         {
           id: 'mxplan',
-          universe: webCloudUniverse,
+          universe: webCloudUniverse.id,
           translation: 'sidebar_mxplan',
           serviceType: 'EMAIL_DOMAIN',
           routing: {
@@ -135,7 +135,7 @@ webCloudUniverse.children = [
         },
         {
           id: 'email-delegated',
-          universe: webCloudUniverse,
+          universe: webCloudUniverse.id,
           translation: 'sidebar_email_delegated',
           serviceType: 'EMAIL_DELEGATED',
           routing: {
@@ -148,13 +148,13 @@ webCloudUniverse.children = [
     },
     {
       id: 'microsoft',
-      universe: webCloudUniverse,
+      universe: webCloudUniverse.id,
       translation: 'sidebar_microsoft',
       features: ['office', 'exchange', 'sharepoint'],
       children: [
         {
           id: 'office',
-          universe: webCloudUniverse,
+          universe: webCloudUniverse.id,
           translation: 'sidebar_license_office',
           serviceType: 'LICENSE_OFFICE',
           routing: {
@@ -165,7 +165,7 @@ webCloudUniverse.children = [
         },
         {
           id: 'exchange',
-          universe: webCloudUniverse,
+          universe: webCloudUniverse.id,
           translation: 'sidebar_exchange',
           serviceType: 'EMAIL_EXCHANGE_SERVICE',
           routing: {
@@ -176,7 +176,7 @@ webCloudUniverse.children = [
         },
         {
           id: 'sharepoint',
-          universe: webCloudUniverse,
+          universe: webCloudUniverse.id,
           translation: 'sidebar_sharepoint',
           serviceType: 'MSSERVICES_SHAREPOINT',
           routing: {

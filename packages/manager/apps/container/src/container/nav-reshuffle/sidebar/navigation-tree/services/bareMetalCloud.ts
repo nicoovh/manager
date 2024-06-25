@@ -16,13 +16,13 @@ const baremetalUniverse: Node = {
 baremetalUniverse.children = [
   {
     id: 'bmc-dedicated-vps',
-    universe: baremetalUniverse,
+    universe: baremetalUniverse.id,
     translation: 'sidebar_dedicated_vps',
     features: ['dedicated-server', 'vps', 'managed-bare-metal', 'license'],
     children: [
       {
         id: 'dedicated-servers',
-        universe: baremetalUniverse,
+        universe: baremetalUniverse.id,
         translation: 'sidebar_dedicated',
         serviceType: 'DEDICATED_SERVER',
         routing: {
@@ -33,7 +33,7 @@ baremetalUniverse.children = [
       },
       {
         id: 'dedicated-cluster',
-        universe: baremetalUniverse,
+        universe: baremetalUniverse.id,
         serviceType: 'DEDICATED_CLUSTER',
         hidden: true,
         routing: {
@@ -44,7 +44,7 @@ baremetalUniverse.children = [
       },
       {
         id: 'dedicated-housing',
-        universe: baremetalUniverse,
+        universe: baremetalUniverse.id,
         translation: 'sidebar_dedicated_housing',
         serviceType: 'DEDICATED_HOUSING',
         routing: {
@@ -56,7 +56,7 @@ baremetalUniverse.children = [
       },
       {
         id: 'vps',
-        universe: baremetalUniverse,
+        universe: baremetalUniverse.id,
         translation: 'sidebar_vps',
         serviceType: 'VPS',
         routing: {
@@ -67,7 +67,7 @@ baremetalUniverse.children = [
       },
       {
         id: 'managed-bare-metal',
-        universe: baremetalUniverse,
+        universe: baremetalUniverse.id,
         translation: 'sidebar_dedicated_cloud',
         serviceType: 'DEDICATEDCLOUD',
         routing: {
@@ -78,7 +78,7 @@ baremetalUniverse.children = [
       },
       {
         id: 'dedicated-licences',
-        universe: baremetalUniverse,
+        universe: baremetalUniverse.id,
         translation: 'sidebar_licences',
         serviceType: 'LICENSE',
         routing: {
@@ -91,7 +91,7 @@ baremetalUniverse.children = [
   },
   {
     id: 'bmc-storage-backup',
-    universe: baremetalUniverse,
+    universe: baremetalUniverse.id,
     translation: 'sidebar_storage_backup',
     features: [
       'dedicated-nasha',
@@ -102,7 +102,7 @@ baremetalUniverse.children = [
     children: [
       {
         id: 'nasha',
-        universe: baremetalUniverse,
+        universe: baremetalUniverse.id,
         translation: 'sidebar_nasha',
         serviceType: 'DEDICATED_NASHA',
         routing: {
@@ -113,7 +113,7 @@ baremetalUniverse.children = [
       },
       {
         id: 'netapp',
-        universe: baremetalUniverse,
+        universe: baremetalUniverse.id,
         translation: 'sidebar_netapp',
         serviceType: 'STORAGE_NETAPP',
         routing: {
@@ -124,7 +124,7 @@ baremetalUniverse.children = [
       },
       {
         id: 'cloud-disk-array',
-        universe: baremetalUniverse,
+        universe: baremetalUniverse.id,
         translation: 'sidebar_cda',
         serviceType: 'DEDICATED_CEPH',
         routing: {
@@ -135,7 +135,7 @@ baremetalUniverse.children = [
       },
       {
         id: 'veeam-cloud-connect',
-        universe: baremetalUniverse,
+        universe: baremetalUniverse.id,
         translation: 'sidebar_veeamcc',
         serviceType: 'VEEAMCLOUDCONNECT',
         routing: {

@@ -12,13 +12,13 @@ const hostedPrivateCloudUniverse: Node = {
 hostedPrivateCloudUniverse.children = [
   {
     id: 'hpc-platforms',
-    universe: hostedPrivateCloudUniverse,
+    universe: hostedPrivateCloudUniverse.id,
     translation: 'sidebar_platforms',
     features: ['dedicated-cloud', 'nutanix', 'license'],
     children: [
       {
         id: 'vm-ware',
-        universe: hostedPrivateCloudUniverse,
+        universe: hostedPrivateCloudUniverse.id,
         translation: 'sidebar_vmware',
         serviceType: 'DEDICATEDCLOUD_VMWARE',
         routing: {
@@ -29,7 +29,7 @@ hostedPrivateCloudUniverse.children = [
       },
       {
         id: 'nutanix',
-        universe: hostedPrivateCloudUniverse,
+        universe: hostedPrivateCloudUniverse.id,
         translation: 'sidebar_nutanix',
         serviceType: 'NUTANIX',
         routing: {
@@ -40,7 +40,7 @@ hostedPrivateCloudUniverse.children = [
       },
       {
         id: 'hpc-licences',
-        universe: hostedPrivateCloudUniverse,
+        universe: hostedPrivateCloudUniverse.id,
         translation: 'sidebar_licences',
         serviceType: 'LICENSE',
         routing: {
@@ -53,13 +53,13 @@ hostedPrivateCloudUniverse.children = [
   },
   {
     id: 'hpc-storage-backup',
-    universe: hostedPrivateCloudUniverse,
+    universe: hostedPrivateCloudUniverse.id,
     translation: 'sidebar_storage_backup',
     features: ['veeam-enterprise', 'veeam-cloud-connect'],
     children: [
       {
         id: 'veeam-enterprise',
-        universe: hostedPrivateCloudUniverse,
+        universe: hostedPrivateCloudUniverse.id,
         translation: 'sidebar_veeam_enterprise',
         serviceType: 'VEEAM_VEEAMENTERPRISE',
         routing: {
@@ -70,7 +70,7 @@ hostedPrivateCloudUniverse.children = [
       },
       {
         id: 'veeam-cloud-connect',
-        universe: hostedPrivateCloudUniverse,
+        universe: hostedPrivateCloudUniverse.id,
         translation: 'sidebar_veeamcc',
         serviceType: 'VEEAMCLOUDCONNECT',
         routing: {

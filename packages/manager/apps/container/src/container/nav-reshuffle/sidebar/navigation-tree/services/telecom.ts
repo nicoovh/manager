@@ -16,13 +16,13 @@ const telecomUniverse: Node = {
 telecomUniverse.children = [
   {
     id: 'internet',
-    universe: telecomUniverse,
+    universe: telecomUniverse.id,
     translation: 'sidebar_internet',
     features: ['pack', 'overthebox'],
     children: [
       {
         id: 'packs',
-        universe: telecomUniverse,
+        universe: telecomUniverse.id,
         translation: 'sidebar_packs_xdsl',
         serviceType: 'PACK_XDSL',
         routing: {
@@ -33,7 +33,7 @@ telecomUniverse.children = [
       },
       {
         id: 'otb',
-        universe: telecomUniverse,
+        universe: telecomUniverse.id,
         translation: 'sidebar_otb',
         serviceType: 'OVERTHEBOX',
         routing: {
@@ -46,13 +46,13 @@ telecomUniverse.children = [
   },
   {
     id: 'telephony',
-    universe: telecomUniverse,
+    universe: telecomUniverse.id,
     translation: 'sidebar_telephony',
     features: ['telephony', 'sms', 'fax'],
     children: [
       {
         id: 'voipgroup',
-        universe: telecomUniverse,
+        universe: telecomUniverse.id,
         translation: 'sidebar_telephony_voip_groups',
         serviceType: 'TELEPHONY',
         routing: {
@@ -63,7 +63,7 @@ telecomUniverse.children = [
       },
       {
         id: 'sms',
-        universe: telecomUniverse,
+        universe: telecomUniverse.id,
         translation: 'sidebar_telephony_sms',
         serviceType: 'SMS',
         routing: {
@@ -74,7 +74,7 @@ telecomUniverse.children = [
       },
       {
         id: 'fax',
-        universe: telecomUniverse,
+        universe: telecomUniverse.id,
         translation: 'sidebar_telephony_fax',
         serviceType: 'FREEFAX',
         routing: {
@@ -87,7 +87,7 @@ telecomUniverse.children = [
   },
   {
     id: 'telecom-operations',
-    universe: telecomUniverse,
+    universe: telecomUniverse.id,
     translation: 'sidebar_telecom_operations',
     routing: {
       application: 'telecom',

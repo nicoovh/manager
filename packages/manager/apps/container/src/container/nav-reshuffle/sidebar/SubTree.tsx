@@ -218,7 +218,7 @@ const SubTree = ({
                   id={node.id}
                   className={style.sidebar_pciEntry}
                 >
-                  {!shouldHideElement(node, 1, 2) && (
+                  {!shouldHideElement(node, 1) && (
                     <SubTreeSection
                       node={node}
                       selectedPciProject={selectedPciProject?.project_id}

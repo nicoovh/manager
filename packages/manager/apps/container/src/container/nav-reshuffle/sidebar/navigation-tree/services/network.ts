@@ -20,7 +20,7 @@ const networkUniverse: Node = {
 networkUniverse.children = [
   {
     id: 'vrack',
-    universe: networkUniverse,
+    universe: networkUniverse.id,
     translation: 'sidebar_vrack',
     serviceType: 'VRACK',
     routing: {
@@ -31,7 +31,7 @@ networkUniverse.children = [
   },
   {
     id: 'ip',
-    universe: networkUniverse,
+    universe: networkUniverse.id,
     translation: 'sidebar_ip',
     serviceType: 'IP_SERVICE',
     routing: {
@@ -42,7 +42,7 @@ networkUniverse.children = [
   },
   {
     id: 'dedicated-network-security',
-    universe: networkUniverse,
+    universe: networkUniverse.id,
     translation: 'sidebar_network_security',
     serviceType: 'NETWORK_SECURITY',
     routing: {
@@ -53,9 +53,10 @@ networkUniverse.children = [
   },
   {
     id: 'ovhvrack-services',
-    universe: networkUniverse,
+    universe: networkUniverse.id,
     translation: 'sidebar_vrack_services',
     serviceType: 'VRACKSERVICES',
+    badge: 'beta',
     routing: {
       application: 'vrack-services',
       hash: '#/',
@@ -64,7 +65,7 @@ networkUniverse.children = [
   },
   {
     id: 'ovhcloud-connect',
-    universe: networkUniverse,
+    universe: networkUniverse.id,
     translation: 'sidebar_cloud_connect',
     serviceType: 'OVHCLOUDCONNECT',
     routing: {
@@ -75,7 +76,7 @@ networkUniverse.children = [
   },
   {
     id: 'iplb',
-    universe: networkUniverse,
+    universe: networkUniverse.id,
     translation: 'sidebar_iplb',
     serviceType: 'IPLOADBALANCING',
     routing: {
@@ -86,7 +87,7 @@ networkUniverse.children = [
   },
   {
     id: 'cdn',
-    universe: networkUniverse,
+    universe: networkUniverse.id,
     translation: 'sidebar_cdn',
     serviceType: 'CDN_DEDICATED',
     routing: {

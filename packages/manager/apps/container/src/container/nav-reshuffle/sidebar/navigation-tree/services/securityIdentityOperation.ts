@@ -14,7 +14,7 @@ const sioUniverse : Node = {
 sioUniverse.children = [
   {
     id: 'security-identity-operation-iam',
-    universe: sioUniverse,
+    universe: sioUniverse.id,
     translation: 'sidebar_security_identity_operations_iam',
     routing: {
       application: 'iam',
@@ -23,7 +23,7 @@ sioUniverse.children = [
   },
   {
     id: 'security-identity-operation-logs',
-    universe: sioUniverse,
+    universe: sioUniverse.id,
     translation: 'sidebar_security_identity_operations_logs',
     serviceType: 'DBAAS_LOGS',
     routing: {

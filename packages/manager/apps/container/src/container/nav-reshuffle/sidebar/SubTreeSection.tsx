@@ -56,9 +56,18 @@ const SubTreeSection: React.FC<ComponentProps<SubTreeSectionProps>> = ({
             </h2>
           </li>
 
-          {node.children?.filter(childNode => !childNode.hidden).map((childNode) => (
-            <li key={childNode.id} id={childNode.id} className={`px-3 ${childNode.id === selectedNode?.id ? style.sidebar_submenu_items_selected :  style.sidebar_submenu_items}`}>
-              {!shouldHideElement(childNode, 1, 2) && (
+          {node.children
+            ?.filter((childNode) => !shouldHideElement(childNode, 1))
+            .map((childNode, index) => (
+              <li
+                key={childNode.id + index}
+                id={childNode.id}
+                className={`px-3 ${
+                  childNode.id === selectedNode?.id
+                    ? style.sidebar_submenu_items_selected
+                    : style.sidebar_submenu_items
+                }`}
+              >
                 <SidebarLink
                   linkParams={{
                     projectId: selectedPciProject,
@@ -67,21 +76,26 @@ const SubTreeSection: React.FC<ComponentProps<SubTreeSectionProps>> = ({
                   handleNavigation={() => menuClickHandler(childNode)}
                   id={childNode.idAttr}
                 />
-              )}
-              {childNode.separator && <hr />}
-            </li>
-          ))}
+                {childNode.separator && <hr />}
+              </li>
+            ))}
         </ul>
       ) : (
-        <div className="px-3">
+        <div
+          className={`px-3 ${
+            node.id === selectedNode?.id
+              ? style.sidebar_submenu_items_selected
+              : style.sidebar_submenu_items
+          }`}
+        >
           <SidebarLink
-          linkParams={{
-            projectId: selectedPciProject,
-          }}
-          node={node}
-          handleNavigation={() => menuClickHandler(node)}
-          id={node.idAttr}
-        />
+            linkParams={{
+              projectId: selectedPciProject,
+            }}
+            node={node}
+            handleNavigation={() => menuClickHandler(node)}
+            id={node.idAttr}
+          />
         </div>
       )}
       {node.separator && <hr />}

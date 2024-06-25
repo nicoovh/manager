@@ -14,7 +14,7 @@ const sunriseUniverse: Node = {
 sunriseUniverse.children = [
   {
     id: 'horizon-view',
-    universe: sunriseUniverse,
+    universe: sunriseUniverse.id,
     translation: 'sidebar_sunrise_infra',
     routing: {
       application: 'sunrise',
@@ -23,7 +23,7 @@ sunriseUniverse.children = [
   },
   {
     id: 'telephony',
-    universe: sunriseUniverse,
+    universe: sunriseUniverse.id,
     translation: 'sidebar_sunrise_contact_center',
     routing: {
       application: 'sunrise',
@@ -32,7 +32,7 @@ sunriseUniverse.children = [
   },
   {
     id: 'csp2',
-    universe: sunriseUniverse,
+    universe: sunriseUniverse.id,
     translation: 'sidebar_sunrise_office',
     routing: {
       application: 'sunrise',
@@ -41,7 +41,7 @@ sunriseUniverse.children = [
   },
   {
     id: 'sslGateway',
-    universe: sunriseUniverse,
+    universe: sunriseUniverse.id,
     translation: 'sidebar_sunrise_ssl_gateway',
     routing: {
       application: 'sunrise',
