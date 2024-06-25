@@ -20,6 +20,7 @@ import {
   initFeatureNames,
   shouldHideElement,
   findUniverse,
+  splitPathIntoSegmentsRouteParams,
 } from './utils';
 import { Node } from './navigation-tree/node';
 import useProductNavReshuffle from '@/core/product-nav-reshuffle';
@@ -59,6 +60,7 @@ const Sidebar = (): JSX.Element => {
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>(null);
   const mobile = isMobile();
   const logoLink = navigationPlugin.getURL('hub', '#/');
+  const savedLocationKey = 'NAVRESHUFFLE_SAVED_LOCATION';
 
   const toggleSidebar = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -144,7 +146,7 @@ const Sidebar = (): JSX.Element => {
     setSelectedNode(parent);
     setDisplayedNode(parent);
     setSelectedSubmenu(node);
-    window.localStorage.setItem('NAVRESHUFFLE_SAVED_LOCATION', node.id);
+    window.localStorage.setItem(savedLocationKey, node.id);
     if (!mobile) setOpen(false);
   };
 
@@ -152,7 +154,7 @@ const Sidebar = (): JSX.Element => {
     if (displayedNode) return;
 
     const savedNodeID = window.localStorage.getItem(
-      'NAVRESHUFFLE_SAVED_LOCATION',
+      savedLocationKey,
     );
     
     const pathname = location.pathname;
@@ -164,9 +166,13 @@ const Sidebar = (): JSX.Element => {
           ? node.routing.hash.replace('#', node.routing.application)
           : '/' + node.routing.application;
         
-        if (pathname.startsWith(nodePath)) {
+        const parsedPath = splitPathIntoSegmentsRouteParams(nodePath);
+        const isMatching = parsedPath.reduce((acc: boolean, segment: string) => acc && pathname.includes(segment), true);
+        if (isMatching) {
           selectSubmenu(node, parent);
           return;
+        } else {
+          window.localStorage.removeItem(savedLocationKey);
         }
       }
     }

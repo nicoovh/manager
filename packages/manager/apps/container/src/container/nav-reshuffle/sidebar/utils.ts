@@ -172,10 +172,7 @@ export function findPathToNodeByApp(
   return path;
 }
 
-export const shouldHideElement = (
-  node: Node,
-  count: number | boolean
-) => {
+export const shouldHideElement = (node: Node, count: number | boolean) => {
   if (node.hideIfEmpty && !count) {
     return true;
   }
@@ -213,31 +210,35 @@ export const isMobile = () => {
   return regex.test(navigator.userAgent);
 };
 
-export const findUniverse = (root: Node, locationPath: string) => {
-  // this function is used to parse a path with the pattern /some/thing/{id}/other/thing
-  // and return it as an array of segments: ['/some/thing/', '/other/thing']
-  // if no curly brackets, that returns an array that contains only the path
-  const splitLocationPathIgnoringDynamicSegments = (path: string) : string[] => {
-    const regex = /\/(?!{)[^\/]+(\/(?!{)[^\/]+)?/g;
-    const matches = path.match(regex);
-    return matches ? matches : [path];
-  }
+/* this function is used to parse a path with the pattern /some/thing/{id}/other/thing
+and return it as an array of segments: ['/some/thing/', '/other/thing']
+if no curly brackets, that returns an array that contains only the path */
+export const splitPathIntoSegmentsRouteParams = (
+  path: string,
+): string[] => {
+  const regex = /\/(?!{)[^\/]+(\/(?!{)[^\/]+)?/g;
+  const matches = path.match(regex);
+  return matches ? matches : [path];
+};
 
+export const findUniverse = (root: Node, locationPath: string) => {
   const isMatchingNode = (node: Node, pathSegment: string) => {
     if (!node.routing) return null;
     const nodePath = node.routing.hash
       ? node.routing.hash.replace('#', node.routing.application)
       : '/' + node.routing.application;
 
-    const parsedPath = splitLocationPathIgnoringDynamicSegments(nodePath);
-    return parsedPath.reduce((acc: boolean, segment: string) => pathSegment.includes(segment) && acc, true) ? node : null;
+    const parsedPath = splitPathIntoSegmentsRouteParams(nodePath);
+    return parsedPath.reduce(
+      (acc: boolean, segment: string) => pathSegment.includes(segment) && acc,
+      true,
+    )
+      ? node
+      : null;
   };
 
   const exploreTree = (node: Node, pathSegment: string): Node | null => {
-    if (
-      node.children &&
-      typeof node.children[Symbol.iterator] === 'function'
-    ) {
+    if (node.children && typeof node.children[Symbol.iterator] === 'function') {
       for (let child of node.children) {
         const result = exploreTree(child, pathSegment);
         if (result) return result;
@@ -260,7 +261,7 @@ export const findUniverse = (root: Node, locationPath: string) => {
       };
     }
   }
-  return {node: null, parent: null};
+  return { node: null, parent: null };
 };
 
 export default {
