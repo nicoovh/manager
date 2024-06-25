@@ -16,12 +16,12 @@ import {
 import { useNotifications } from '@ovhcloud/manager-components';
 import { useQuery } from '@tanstack/react-query';
 import { useGenerateUrl, usePlatform } from '@/hooks';
-import { deleteZimbraPlatformAccount } from '@/api/DELETE/apiv2/services';
 import Modal from '@/components/Modals/Modal';
 import {
-  getZimbraPlatformEmailsDetail,
-  getZimbraPlatformEmailsDetailQueryKey,
-} from '@/api';
+  getZimbraPlatformAccountDetail,
+  deleteZimbraPlatformAccount,
+  getZimbraPlatformAccountDetailQueryKey,
+} from '@/api/account';
 
 export default function ModalDeleteOrganization() {
   const [searchParams] = useSearchParams();
@@ -36,12 +36,12 @@ export default function ModalDeleteOrganization() {
 
   const [step, setStep] = useState(1);
   const { data, isLoading } = useQuery({
-    queryKey: getZimbraPlatformEmailsDetailQueryKey(
+    queryKey: getZimbraPlatformAccountDetailQueryKey(
       platformId,
       deleteEmailAccountId,
     ),
     queryFn: () =>
-      getZimbraPlatformEmailsDetail(platformId, deleteEmailAccountId),
+      getZimbraPlatformAccountDetail(platformId, deleteEmailAccountId),
     enabled: !!platformId,
   });
 

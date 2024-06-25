@@ -19,7 +19,7 @@ import {
   Notifications,
 } from '@ovhcloud/manager-components';
 import { Outlet } from 'react-router-dom';
-
+import { AccountType } from '@/api/account';
 import {
   useOrganization,
   useOverridePage,
@@ -106,7 +106,7 @@ export default function EmailAccounts() {
   const isOverriddedPage = useOverridePage();
 
   const items: EmailsItem[] =
-    data?.map((item) => ({
+    data?.map((item: AccountType) => ({
       id: item.id,
       email: item.currentState.email,
       offer: item.currentState.offer,

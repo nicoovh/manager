@@ -28,7 +28,7 @@ import Modal from '@/components/Modals/Modal';
 import {
   postZimbraPlatformOrganization,
   putZimbraPlatformOrganization,
-} from '@/api';
+} from '@/api/organization';
 
 type FieldType = {
   value: string;

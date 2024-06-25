@@ -14,7 +14,7 @@ const ActionButtonEmail: React.FC<ActionButtonEmailAccountProps> = ({
   const { t } = useTranslation('emails');
 
   const hrefEditEmailAccount = useGenerateUrl('./edit', 'href', {
-    deleteEmailAccountId: emailsItem.id,
+    editEmailAccountId: emailsItem.id,
   });
 
   const hrefDeleteEmailAccount = useGenerateUrl('./delete', 'href', {

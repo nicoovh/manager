@@ -15,8 +15,8 @@ import { usePlatform } from '@/hooks';
 import {
   getZimbraPlatformDomains,
   getZimbraPlatformDomainsQueryKey,
-} from '@/api';
-import { deleteZimbraPlatformOrganization } from '@/api/DELETE/apiv2/services';
+} from '@/api/domain';
+import { deleteZimbraPlatformOrganization } from '@/api/organization';
 import Modal from '@/components/Modals/Modal';
 
 export default function ModalDeleteOrganization() {

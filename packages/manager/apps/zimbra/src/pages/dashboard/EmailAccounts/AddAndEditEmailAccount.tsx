@@ -34,11 +34,11 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useGenerateUrl, usePlatform } from '@/hooks';
 import {
-  getZimbraPlatformEmailsDetail,
-  getZimbraPlatformEmailsDetailQueryKey,
+  getZimbraPlatformAccountDetail,
+  getZimbraPlatformAccountDetailQueryKey,
   postZimbraPlatformAccount,
   putZimbraPlatformAccount,
-} from '@/api';
+} from '@/api/account';
 import Loading from '@/components/Loading/Loading';
 import { useDomains } from '@/hooks/useDomains';
 
@@ -130,12 +130,12 @@ export default function AddAndEditAccount() {
     data: editAccountDetail,
     isLoading: isLoadingEmailDetailRequest,
   } = useQuery({
-    queryKey: getZimbraPlatformEmailsDetailQueryKey(
+    queryKey: getZimbraPlatformAccountDetailQueryKey(
       platformId,
       editEmailAccountId,
     ),
     queryFn: () =>
-      getZimbraPlatformEmailsDetail(platformId, editEmailAccountId),
+      getZimbraPlatformAccountDetail(platformId, editEmailAccountId),
     enabled: !!platformId && !!editEmailAccountId,
   });
 
