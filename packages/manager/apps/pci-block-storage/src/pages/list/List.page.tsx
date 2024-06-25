@@ -40,6 +40,7 @@ import {
   ODS_SPINNER_SIZE,
 } from '@ovhcloud/ods-components';
 import { FilterCategories, FilterComparator } from '@ovh-ux/manager-core-api';
+import HidePreloader from '@/core/HidePreloader';
 import { useAllVolumes, useVolumes } from '@/api/hooks/useVolume';
 import { useDatagridColumn } from '@/hooks/useDatagridColumn';
 
@@ -92,6 +93,7 @@ export default function ListingPage() {
       condition={allVolumes?.length === 0}
     >
       <>
+        <HidePreloader />
         {project && (
           <OsdsBreadcrumb
             items={[
