@@ -1,8 +1,18 @@
-export default class DomainDnsAnycastConfirmTerminateCtrl {
+export default class DomainDnsModifyConfirmCtrl {
   /* @ngInject */
-  constructor(Domain) {
+  constructor(Domain, $scope) {
     this.Domain = Domain;
     this.loading = false;
+    this.$scope = $scope;
+  }
+
+  $onInit() {
+    this.$scope.$on('modifiedDnsList', (event, modifiedDnsList) => {
+      this.modifiedDnsList = modifiedDnsList;
+      console.log('Modified DNS List:', this.modifiedDnsList);
+    });
+    console.log(this.modifiedDnsList);
+    console.log(this.$scope);
   }
 
   confirm() {

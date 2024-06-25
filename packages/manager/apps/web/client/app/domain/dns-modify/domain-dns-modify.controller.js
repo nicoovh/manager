@@ -41,6 +41,7 @@ export default class DomainDnsModifyCtrl {
     };
     this.isZone = false;
     this.zone = null;
+    this.zones = [];
     this.isDnssecEnable = false;
     this.loading = {
       all: false,
@@ -52,6 +53,10 @@ export default class DomainDnsModifyCtrl {
 
     this.$scope.$on('Domain.Dns.Reload', () => this.init());
     this.$scope.getCurrentDns = () => this.getCurrentDns();
+
+    this.$scope.alerts = {
+      main: 'domain_dns_modify_alert_main',
+    };
 
     this.$q
       .all({
@@ -97,9 +102,7 @@ export default class DomainDnsModifyCtrl {
             this.$translate('domain_dns_error_initializing', {
               message: error.data?.message || error.message || 'Unknown error',
             }).then((translation) => {
-              console.log(translation);
-              this.Alerter.error(translation, this.$scope.alerts.main);
-              console.log(this.$scope.alerts.main);
+              this.Alerter.warning(translation, this.$scope.alerts.main);
             });
           });
         this.Domain.getZoneByZoneName(this.$stateParams.productId).then(
@@ -107,6 +110,7 @@ export default class DomainDnsModifyCtrl {
             if (zone) {
               this.isZone = true;
               this.zone = zone;
+              this.zones = zone.nameServers;
             }
           },
         );
@@ -120,6 +124,8 @@ export default class DomainDnsModifyCtrl {
     this.initModel();
 
     this.modifiedDnsList = [];
+
+    this.$scope.$broadcast('modifyDnsList', this.modifiedDnsList);
     this.showAddForm = true;
     this.forms = [true];
     this.isCurrentDnsDisabled = true;
@@ -234,7 +240,20 @@ export default class DomainDnsModifyCtrl {
     this.onFormsChange();
   }
 
-  applyConfiguration() {
+  onChange(value) {
+    if (value === this.constants.CONFIGURATION_TYPES.INTERNAL) {
+      console.log(this.zone.nameServers);
+      this.modifiedDnsList = [];
+      this.zone.nameServers.forEach((ns) => {
+        this.modifiedDnsList.push({
+          nameServer: ns,
+        });
+      });
+      console.log(this.modifiedDnsList);
+    }
+  }
+
+  /* applyConfiguration() {
     const inputs = [];
     this.modifiedDnsList.forEach((ns) => {
       const nameServer = {
@@ -274,7 +293,7 @@ export default class DomainDnsModifyCtrl {
     } else {
       // TODO: display error
     }
-  }
+  } */
 
   onFormsChange() {
     this.showAddForm =
